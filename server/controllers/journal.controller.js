@@ -36,6 +36,8 @@ const getJournals = async (req, res) => {
 const getSummaryNarrative = async (req, res) => {
   const userId = req.userId;
   const days = parseInt(req.query.days) || 7;
+  console.log(days);
+  
 
   const fromDate = new Date();
   fromDate.setDate(fromDate.getDate() - days);
@@ -45,7 +47,7 @@ const getSummaryNarrative = async (req, res) => {
       userId,
       createdAt: { $gte: fromDate },
     });
-
+    
     if (journals.length === 0) {
       return res.status(404).json({ message: "No journals found for the requested period." });
     }
