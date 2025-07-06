@@ -6,10 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import Link from "next/link";
 import { saveToken } from "../../lib/auth";
 
 type Mode = "login" | "signup";
@@ -40,16 +40,21 @@ export default function AuthForm({ mode }: Props) {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const url = mode === "login" ? "http://localhost:8001/api/auth/login" : "http://localhost:8001/api/auth/signup";
+      const url =
+        mode === "login"
+          ? "http://localhost:8001/api/auth/login"
+          : "http://localhost:8001/api/auth/signup";
+
       const res = await axios.post(url, data);
       const token = res.data.token;
+
       if (token) {
         saveToken(token);
         toast.success(`${mode === "login" ? "Logged in" : "Account created"}!`);
         router.push("/journal");
       }
     } catch (err: any) {
-      console.log("🔥 ERROR:", err.response?.data?.message ); 
+      console.log("🔥 ERROR:", err.response?.data?.message);
       toast.error(err.response?.data?.message || "Auth failed");
     }
   };

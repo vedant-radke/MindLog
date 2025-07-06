@@ -4,11 +4,18 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../../components/ui/button";
 import { toast } from "react-toastify";
-import { clearToken } from "../../lib/auth";
+import { clearToken, getToken } from "../../lib/auth";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = getToken();
+    setIsLoggedIn(!!token);
+  }, [pathname]); // Refresh check on route change
 
   const handleLogout = () => {
     clearToken();
@@ -17,12 +24,11 @@ export default function Navbar() {
   };
 
   const isAuthPage = pathname === "/login" || pathname === "/signup";
-
-  if (isAuthPage) return null; // Hide navbar on login/signup
+  if (isAuthPage || !isLoggedIn) return null;
 
   return (
-    <nav className="w-full px-6 py-4 shadow-sm bg-white flex items-center justify-between">
-      <Link href="/journal" className="text-lg font-semibold text-purple-700">
+    <nav className="sticky top-0 z-50 w-full px-6 py-4 shadow-sm bg-white flex items-center justify-between">
+      <Link href="/" className="text-lg font-semibold text-purple-700">
         🧠 MindLog
       </Link>
 
