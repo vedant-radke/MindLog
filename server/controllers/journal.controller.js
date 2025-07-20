@@ -35,28 +35,25 @@ const getJournals = async (req, res) => {
 
 const getSummaryNarrative = async (req, res) => {
   const userId = req.userId;
-  const days = parseInt(req.query.days) || 7;
-  console.log(days);
-  
-
-  const fromDate = new Date();
-  fromDate.setDate(fromDate.getDate() - days);
 
   try {
-    const journals = await Journal.find({
-      userId,
-      createdAt: { $gte: fromDate },
-    });
-    
+    const journals = await Journal.find({ userId })
+      .sort({ createdAt: -1 }) // most recent first
+      .limit(7); // get last 7 journals
+
     if (journals.length === 0) {
-      return res.status(404).json({ message: "No journals found for the requested period." });
+      return res.status(404).json({ message: "No journals found for analysis." });
     }
 
-    const combinedContent = journals.map(j => `- ${j.content}`).join("\n");
+    const combinedContent = journals
+      .reverse() // so oldest appears first in summary
+      .map(j => `- ${j.content}`)
+      .join("\n");
+
     const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-flash-latest" });
 
     const prompt = `
-You are a kind and empathetic mental health assistant. A user has written journals for the past ${days} days.
+You are a kind and empathetic mental health assistant. A user has written 7 journal entries.
 
 Your job is to analyze and return a short, human-friendly response in the following format:
 
@@ -94,5 +91,6 @@ ${combinedContent}
     res.status(500).json({ message: "Failed to generate emotional summary." });
   }
 };
+
 
 module.exports = { createJournal, getJournals, getSummaryNarrative };

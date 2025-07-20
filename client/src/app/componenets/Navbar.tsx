@@ -44,6 +44,13 @@ export default function Navbar() {
             Write New
           </Button>
         </Link>
+        
+        <Link href="/chat">
+          <Button variant={pathname === "/chat" ? "default" : "ghost"}>
+            Chat
+          </Button>
+        </Link>
+
 
         <Button onClick={handleLogout} variant="outline">
           Logout
