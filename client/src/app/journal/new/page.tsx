@@ -39,7 +39,7 @@ export default function NewJournalPage() {
       const content = editor.getHTML();
       const token = getToken();
       await axios.post(
-        "http://localhost:8001/api/journals",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/journals`,
         { content },
         {
           headers: {

@@ -43,8 +43,8 @@ export default function AuthForm({ mode }: Props) {
     try {
       const url =
         mode === "login"
-          ? "http://localhost:8001/api/auth/login"
-          : "http://localhost:8001/api/auth/signup";
+          ? `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`
+          : `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`;
 
       const res = await axios.post(url, data);
       const token = res.data.token;

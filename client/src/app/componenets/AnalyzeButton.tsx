@@ -21,7 +21,8 @@ export default function AnalyzeButton({ days = 7, onResult }: Props) {
     try {
       const token = getToken();
       const res = await axios.get(
-        `http://localhost:8001/api/journals/summary?days=${days}`,
+        
+        `${process.env.NEXT_PUBLIC_API_URL}/api/journals/summary?days=${days}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

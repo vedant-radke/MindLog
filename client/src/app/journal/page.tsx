@@ -32,7 +32,7 @@ export default function JournalPage() {
     }
 
     axios
-      .get("http://localhost:8001/api/journals", {
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/api/journals`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
