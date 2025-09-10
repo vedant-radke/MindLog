@@ -10,7 +10,7 @@ import Link from "next/link";
 
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { clearToken, saveToken } from "../../lib/auth";
+import {saveToken } from "../../lib/auth";
 
 type Mode = "login" | "signup";
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "../components/ui/button";
-import { ArrowRight, BookOpen, PenLine } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getToken } from "../lib/auth";
 import Navbar from "./componenets/Navbar";

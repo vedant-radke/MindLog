@@ -1,5 +1,4 @@
 import AuthForm from "../componenets/AuthForm";
-import Navbar from "../componenets/Navbar";
 
 export default function LoginPage() {
   return (

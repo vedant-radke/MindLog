@@ -37,6 +37,7 @@ export default function ChatPage() {
       const botMessage = { sender: "bot", text: data.reply || "No reply" };
       setMessages((prev) => [...prev, botMessage]);
     } catch (err) {
+      console.error(err);
       setMessages((prev) => [
         ...prev,
         { sender: "bot", text: "Something went wrong." },
