@@ -8,7 +8,7 @@ import Color from "@tiptap/extension-color";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { Button } from "../../../components/ui/button";
 import { getToken } from "../../../lib/auth";
@@ -50,27 +50,31 @@ export default function NewJournalPage() {
 
       toast.success("Journal saved!");
       router.push("/journal");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Error saving journal");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      toast.error(error.response?.data?.message || "Error saving journal");
     }
   };
 
   return (
     <>
-      <Navbar/>
-    <div className="max-w-3xl mx-auto mt-6 px-4">
-      <h1 className="text-2xl font-bold mb-4">Write a New Journal ✍️</h1>
+      <Navbar />
+      <div className="max-w-3xl mx-auto mt-6 px-4">
+        <h1 className="text-2xl font-bold mb-4">Write a New Journal ✍️</h1>
 
-      <div className="bg-white p-4 rounded-xl shadow border mb-4 min-h-[200px]">
-        {editor && (
-          <EditorContent editor={editor} className="prose max-w-full focus:outline-none" />
-        )}
+        <div className="bg-white p-4 rounded-xl shadow border mb-4 min-h-[200px]">
+          {editor && (
+            <EditorContent
+              editor={editor}
+              className="prose max-w-full focus:outline-none"
+            />
+          )}
+        </div>
+
+        <Button onClick={handleSave} className="rounded-xl">
+          Save Journal
+        </Button>
       </div>
-
-      <Button onClick={handleSave} className="rounded-xl">
-        Save Journal
-      </Button>
-    </div>
     </>
   );
 }

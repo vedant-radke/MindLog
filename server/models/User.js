@@ -13,7 +13,15 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  }
+  },
+  // Current streak count
+  streak: {
+    type: Number,
+    default: 0
+  },
+  lastJournalDate: {
+    type: Date,
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

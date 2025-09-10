@@ -4,13 +4,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { saveToken } from "../../lib/auth";
+import { clearToken, saveToken } from "../../lib/auth";
 
 type Mode = "login" | "signup";
 
@@ -18,6 +18,7 @@ interface Props {
   mode: Mode;
 }
 
+// zod - for validationd
 const getSchema = (mode: Mode) =>
   z.object({
     email: z.string().email(),
@@ -53,9 +54,18 @@ export default function AuthForm({ mode }: Props) {
         toast.success(`${mode === "login" ? "Logged in" : "Account created"}!`);
         router.push("/journal");
       }
-    } catch (err: any) {
-      console.log("🔥 ERROR:", err.response?.data?.message);
-      toast.error(err.response?.data?.message || "Auth failed");
+
+      // this code will make automatic logout afer 600000 mili seconds
+      // setTimeout(() => {
+      //   clearToken();
+      //   alert("Session expired. Please log in again.");
+      //   window.location.href = "/login";
+      // }, 600000);
+
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      console.log("🔥 ERROR:", error.response?.data?.message);
+      toast.error(error.response?.data?.message || "Auth failed");
     }
   };
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ For redirect
+import { useRouter } from "next/navigation"; 
 import { Button } from "../../components/ui/button";
 import { toast } from "react-toastify";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getToken } from "../../lib/auth";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 
 export default function AnalyzeButton({ days = 7, onResult }: Props) {
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); // ✅ Initialize router
+  const router = useRouter(); 
 
   const handleAnalyze = async () => {
     setLoading(true);
@@ -35,13 +35,14 @@ export default function AnalyzeButton({ days = 7, onResult }: Props) {
 
       toast.success("Analysis complete ✅");
 
-      // ✅ Redirect to /summary with query param
       router.push(`/summary?data=${encodeURIComponent(summary)}`);
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "AI analysis failed");
-    } finally {
-      setLoading(false);
-    }
+      
+    } catch (err: unknown) {
+  const error = err as AxiosError<{ message: string }>;
+  toast.error(error.response?.data?.message || "AI analysis failed");
+} finally {
+  setLoading(false);
+}
   };
 
   return (

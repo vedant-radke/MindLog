@@ -1,4 +1,5 @@
 const Journal = require("../models/Journal");
+const User = require("../models/User");
 const analyzeJournal = require("../utils/analyzeJournal"); // reused if needed
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -6,10 +7,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // POST /api/journals
 const createJournal = async (req, res) => {
   const { content } = req.body;
-  
+
   try {
     const analysis = await analyzeJournal(content);
-    
+
     const newJournal = new Journal({
       userId: req.userId,
       content,
@@ -17,6 +18,38 @@ const createJournal = async (req, res) => {
     });
 
     await newJournal.save();
+
+    const user = await User.findById(req.userId);
+
+    if (user) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // midnight for date-only comparison
+
+      if (!user.lastJournalDate) {
+        // First journal ever
+        user.streak = 1;
+      } else {
+        const lastDate = new Date(user.lastJournalDate);
+        lastDate.setHours(0, 0, 0, 0);
+
+        const diffDays = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) {
+          // Already wrote today → streak unchanged
+        } else if (diffDays === 1) {
+          // Wrote yesterday → increment streak
+          user.streak += 1;
+        } else {
+          // Missed a day → reset streak
+          user.streak = 1;
+        }
+      }
+
+      // Update last journal date
+      user.lastJournalDate = today;
+      await user.save();
+    }
+
     res.status(201).json(newJournal);
   } catch (err) {
     res.status(500).json({ message: "Failed to create journal", error: err.message });
@@ -87,7 +120,7 @@ ${combinedContent}
     res.status(200).json({ summary });
 
   } catch (error) {
-    console.error("❌ AI Summary Failed:", error.message);
+    console.error(" AI Summary Failed:", error.message);
     res.status(500).json({ message: "Failed to generate emotional summary." });
   }
 };

@@ -21,7 +21,7 @@ export default function Navbar() {
     clearToken();
     toast.success("Logged out");
     router.push("/login");
-  };
+  };  
 
   const isAuthPage = pathname === "/login" || pathname === "/signup";
   if (isAuthPage || !isLoggedIn) return null;

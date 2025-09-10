@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:3000", // Next.js origin
+  origin: "http://localhost:3000", 
   credentials: true
 }));
 app.use(express.json());
@@ -26,6 +26,11 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/journals", journalRoutes);
 app.use("/api/chat", chatRoutes);
+
+// 📅 Start scheduled notification job (9 PM reminder)
+if (process.env.NODE_ENV === "production" || process.env.ENABLE_CRON === "true") {
+  require("./cron/notifyMissedJournal");
+}
 
 // Connect DB and start server
 connectDB();

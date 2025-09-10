@@ -25,7 +25,14 @@ type Blog = {
   slug: string; // ✅ new
 };
 
-const TAGS = ["mentalhealth", "yoga", "habits", "gym", "meditation", "productivity"];
+const TAGS = [
+  "mentalhealth",
+  "yoga",
+  "habits",
+  "gym",
+  "meditation",
+  "productivity",
+];
 
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -40,12 +47,28 @@ export default function BlogsPage() {
   const fetchBlogs = async (tag: string) => {
     try {
       setLoading(true);
-      const res = await axios.get(`https://dev.to/api/articles?tag=${tag}&per_page=20`);
-      const data = res.data.map((item: any) => ({
+      type Journal = {
+        id: string;
+        title: string;
+        description: string;
+        imageUrl: string;
+        tag_list: string[];
+        url: string;
+        slug: string;
+        description_html: string;
+        body_markdown: string;
+        cover_image: string;
+      };
+      const res = await axios.get(
+        `https://dev.to/api/articles?tag=${tag}&per_page=20`
+      );
+      const data = res.data.map((item: Journal) => ({
         id: item.id,
         title: item.title,
         description:
-          item.description || item.description_html || item.body_markdown?.slice(0, 100),
+          item.description ||
+          item.description_html ||
+          item.body_markdown?.slice(0, 100),
         imageUrl: item.cover_image,
         tags: item.tag_list || [],
         url: item.url,
@@ -69,76 +92,80 @@ export default function BlogsPage() {
 
   return (
     <>
-    <Navbar/>
-    <div className="max-w-6xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center text-purple-800">
-        🧘 Self-Help & Wellness Blogs
-      </h1>
+      <Navbar />
+      <div className="max-w-6xl mx-auto p-4">
+        <h1 className="text-3xl font-bold mb-6 text-center text-purple-800">
+          🧘 Self-Help & Wellness Blogs
+        </h1>
 
-      <div className="max-w-xl mx-auto mb-6 flex flex-col sm:flex-row items-center gap-4">
-        <Input
-          placeholder="🔍 Search blogs e.g., anxiety, mindset, relaxation..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="rounded-xl shadow w-full"
-        />
+        <div className="max-w-xl mx-auto mb-6 flex flex-col sm:flex-row items-center gap-4">
+          <Input
+            placeholder="🔍 Search blogs e.g., anxiety, mindset, relaxation..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="rounded-xl shadow w-full"
+          />
 
-        <Select onValueChange={setSelectedTag} defaultValue={selectedTag}>
-          <SelectTrigger className="w-full sm:w-56 rounded-xl shadow">
-            <SelectValue placeholder="Choose category" />
-          </SelectTrigger>
-          <SelectContent>
-            {TAGS.map((tag) => (
-              <SelectItem key={tag} value={tag}>
-                {tag.charAt(0).toUpperCase() + tag.slice(1)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {loading ? (
-        <p className="text-center text-gray-500">Loading blogs...</p>
-      ) : filteredBlogs.length === 0 ? (
-        <p className="text-center text-gray-500">No blogs found for this filter.</p>
-      ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredBlogs.map((blog) => (
-            <Card
-              key={blog.id}
-              className="overflow-hidden hover:shadow-xl transition-all duration-300"
-            >
-              {blog.imageUrl && (
-                <img
-                  src={blog.imageUrl}
-                  alt={blog.title}
-                  className="w-full h-44 object-cover"
-                />
-              )}
-              <CardContent className="p-4">
-                <h2 className="text-lg font-semibold mb-2">{blog.title}</h2>
-                <p className="text-sm text-gray-700 mb-3 line-clamp-3">{blog.description}</p>
-
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {blog.tags.map((tag, idx) => (
-                    <Badge key={idx} variant="secondary">
-                      #{tag}
-                    </Badge>
-                  ))}
-                </div>
-
-                <Link
-                  href={`/blogs/${blog.slug}`}
-                  className="text-blue-600 underline text-sm"
-                >
-                  Read full article →
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
+          <Select onValueChange={setSelectedTag} defaultValue={selectedTag}>
+            <SelectTrigger className="w-full sm:w-56 rounded-xl shadow">
+              <SelectValue placeholder="Choose category" />
+            </SelectTrigger>
+            <SelectContent>
+              {TAGS.map((tag) => (
+                <SelectItem key={tag} value={tag}>
+                  {tag.charAt(0).toUpperCase() + tag.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-      )}
-    </div>
+
+        {loading ? (
+          <p className="text-center text-gray-500">Loading blogs...</p>
+        ) : filteredBlogs.length === 0 ? (
+          <p className="text-center text-gray-500">
+            No blogs found for this filter.
+          </p>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredBlogs.map((blog) => (
+              <Card
+                key={blog.id}
+                className="overflow-hidden hover:shadow-xl transition-all duration-300"
+              >
+                {blog.imageUrl && (
+                  <img
+                    src={blog.imageUrl}
+                    alt={blog.title}
+                    className="w-full h-44 object-cover"
+                  />
+                )}
+                <CardContent className="p-4">
+                  <h2 className="text-lg font-semibold mb-2">{blog.title}</h2>
+                  <p className="text-sm text-gray-700 mb-3 line-clamp-3">
+                    {blog.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {blog.tags.map((tag, idx) => (
+                      <Badge key={idx} variant="secondary">
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <Link
+                    href={`/blogs/${blog.slug}`}
+                    className="text-blue-600 underline text-sm"
+                  >
+                    Read full article →
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </>
   );
 }

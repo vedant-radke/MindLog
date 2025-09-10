@@ -38,7 +38,6 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
     
     if (!user){
-      console.log("heeellloo");
       
       return res.status(400).json({ message: "User not exists" });
     }
