@@ -3,7 +3,7 @@ import Navbar from "../../componenets/Navbar";
 
 // Next.js App Router expects this structure
 interface BlogPageProps {
-  params: Promise<{ slug: string }> | { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function BlogDetailPage({ params }: BlogPageProps) {
