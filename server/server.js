@@ -9,17 +9,17 @@ const connectDB = require("./config/db");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: "https://mindlog-in.vercel.app", 
-  credentials: true
-}));
-
+app.use(
+  cors({
+    origin: ["https://mindlog-in.vercel.app", "http://localhost:3000"],
+    credentials: true,
+  })
+);
 
 // Import routes
 const authRoutes = require("./routes/auth.routes");
 const journalRoutes = require("./routes/journal.routes");
 const chatRoutes = require("./routes/chat.routes");
-
 
 // Middleware
 app.use(express.json());
@@ -30,7 +30,10 @@ app.use("/api/journals", journalRoutes);
 app.use("/api/chat", chatRoutes);
 
 // 📅 Start scheduled notification job (9 PM reminder)
-if (process.env.NODE_ENV === "production" || process.env.ENABLE_CRON === "true") {
+if (
+  process.env.NODE_ENV === "production" ||
+  process.env.ENABLE_CRON === "true"
+) {
   require("./cron/notifyMissedJournal");
 }
 
