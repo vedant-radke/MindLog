@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: "mindlog-in.vercel.app", 
+  origin: "https://mindlog-in.vercel.app/", 
   credentials: true
 }));
 app.use(express.json());
