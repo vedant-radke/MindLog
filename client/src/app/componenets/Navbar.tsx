@@ -21,15 +21,18 @@ export default function Navbar() {
     clearToken();
     toast.success("Logged out");
     router.push("/login");
-  };  
+  };
 
   const isAuthPage = pathname === "/login" || pathname === "/signup";
   if (isAuthPage || !isLoggedIn) return null;
 
   return (
-    <nav className="sticky top-0 z-50 w-full px-6 py-4 shadow-sm bg-white flex items-center justify-between">
-      <Link href="/" className="text-lg font-semibold text-purple-700">
-        🧠 MindLog
+    <nav className="sticky top-0 z-50 w-full px-6 py-3 shadow-sm bg-stone-200 flex items-center justify-between">
+      <Link
+        href="/"
+        className="text-2xl font-bold text-gray-800 transition-colors duration-300 hover:text-green-700"
+      >
+        MindLog
       </Link>
 
       <div className="space-x-4">
@@ -44,13 +47,12 @@ export default function Navbar() {
             Write New
           </Button>
         </Link>
-        
+
         <Link href="/chat">
           <Button variant={pathname === "/chat" ? "default" : "ghost"}>
             Chat
           </Button>
         </Link>
-
 
         <Button onClick={handleLogout} variant="outline">
           Logout

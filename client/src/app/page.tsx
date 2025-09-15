@@ -42,8 +42,7 @@ export default function HomePage() {
               to write, reflect, and grow.
             </h1>
             <p className="text-lg sm:text-xl font-medium mb-10 max-w-xl mx-auto drop-shadow-lg">
-              MindLog helps you journal your emotions and gain insights into
-              your mental well-being with intelligent analysis.
+              MindLog helps you journal your emotions and gain insights into your mental well-being with intelligent analysis.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
@@ -130,8 +129,7 @@ export default function HomePage() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
                 viewport={{ once: true }}
-                className="p-8 bg-white rounded-2xl shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300"
-              >
+                className="p-8 bg-white rounded-2xl shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300">
                 <div className="mb-4">
                   <div className="w-12 h-12 mx-auto rounded-full bg-teal-50 flex items-center justify-center">
                     <Brain className="w-6 h-6 text-teal-500" />
@@ -151,8 +149,7 @@ export default function HomePage() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut", delay: 0.4 }}
                 viewport={{ once: true }}
-                className="p-8 bg-white rounded-2xl shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300"
-              >
+                className="p-8 bg-white rounded-2xl shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300">
                 <div className="mb-4">
                   <div className="w-12 h-12 mx-auto rounded-full bg-lime-50 flex items-center justify-center">
                     <TrendingUp className="w-6 h-6 text-lime-500" />
@@ -171,7 +168,7 @@ export default function HomePage() {
         </section>
 
         {/* Final Call to Action Section - Full Screen */}
-        <section className="h-screen flex items-center justify-center  bg-stone-700 text-white text-center w-full">
+        <section className="h-screen flex items-center justify-center bg-stone-700 text-white text-center w-full">
           <div className="container mx-auto">
             <h2 className="text-4xl sm:text-5xl font-extrabold mb-6">
               Ready to start your journey?
