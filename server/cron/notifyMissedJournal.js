@@ -29,7 +29,7 @@ cron.schedule("0 21 * * *", async () => {
      <p>You've been doing amazing with your <strong>MindLog streak</strong>! 🏆</p>
      <p>But it looks like you haven’t written today’s journal entry yet. Don’t break your momentum! 🚀</p>
      <p style="text-align: center;">
-       <a href="http://localhost:3000/journal/new" 
+       <a href="https://mindlog-in.vercel.app/journal/new" 
           style="display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: #fff; 
                  text-decoration: none; border-radius: 6px; font-weight: bold;">
          Write Now ✍️
