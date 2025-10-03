@@ -77,7 +77,9 @@ export default function Navbar() {
             </Link>
 
             <Link href="/journal/new">
-              <Button variant={pathname === "/journal/new" ? "default" : "ghost"}>
+              <Button
+                variant={pathname === "/journal/new" ? "default" : "ghost"}
+              >
                 Write New
               </Button>
             </Link>
@@ -101,7 +103,11 @@ export default function Navbar() {
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
         </div>
       </div>
@@ -139,7 +145,11 @@ export default function Navbar() {
             </Button>
           </Link>
 
-          <Button onClick={handleLogout} variant="outline" className="w-full justify-start">
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="w-full justify-start"
+          >
             Logout
           </Button>
         </div>
