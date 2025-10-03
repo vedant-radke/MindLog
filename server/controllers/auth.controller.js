@@ -32,13 +32,12 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log("here");
+
   
 
   try {
     const user = await User.findOne({ email });
-    console.log(user);
-    
+
     
     if (!user){
       

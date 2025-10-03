@@ -11,7 +11,9 @@ const chatWithAI = async (req, res) => {
     return res.status(400).json({ message: "Message is required." });
 
   try {
-    const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-flash-latest" });
+    const model = genAI.getGenerativeModel({
+      model: "models/gemini-2.5-flash",
+    });
 
     const result = await model.generateContent({
       contents: [
@@ -37,7 +39,6 @@ ${message}
     const reply = response.text();
 
     res.status(200).json({ reply });
-
   } catch (error) {
     console.error("Gemini Error:", error.message);
     res.status(500).json({ message: "Something went wrong with Gemini." });

@@ -1,59 +1,56 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { Button } from "../../components/ui/button";
 import { toast } from "react-toastify";
-import axios, { AxiosError } from "axios";
 import { getToken } from "../../lib/auth";
+import { cn } from "../../lib/utils";
+import { Sparkles } from "lucide-react";
 
 interface Props {
   days?: number;
-  onResult?: (summary: string) => void;
 }
 
-export default function AnalyzeButton({ days = 7, onResult }: Props) {
+export default function AnalyzeButton({ days = 7 }: Props) {
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
 
   const handleAnalyze = async () => {
+    if (loading) return;
     setLoading(true);
     try {
       const token = getToken();
-      const res = await axios.get(
-        
-        `${process.env.NEXT_PUBLIC_API_URL}/api/journals/summary?days=${days}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const summary = res.data.summary;
-
-      if (onResult) onResult(summary);
-
-      toast.success("Analysis complete ✅");
-
-      router.push(`/summary?data=${encodeURIComponent(summary)}`);
-      
-    } catch (err: unknown) {
-  const error = err as AxiosError<{ message: string }>;
-  toast.error(error.response?.data?.message || "AI analysis failed");
-} finally {
-  setLoading(false);
-}
+      if (!token) {
+        toast.error("Please sign in to analyze your journals.");
+        router.push("/login");
+        return;
+      }
+      toast.info("Generating your personalized insights...");
+      router.push(`/summary?days=${days}`);
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="fixed bottom-6 right-6">
+    <div className={cn("pointer-events-auto", "fixed bottom-6 right-6 z-50")}>
       <Button
         onClick={handleAnalyze}
         disabled={loading}
-        className="rounded-full px-6 py-3 shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 hover:scale-105 transition"
+        size="lg"
+        className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:scale-105 focus-visible:ring-emerald-200"
       >
-        {loading ? "Analyzing..." : "🔍 Analyze Journals"}
+        <Sparkles
+          className={cn(
+            "h-4 w-4 transition group-hover:rotate-12",
+            loading && "animate-spin"
+          )}
+          aria-hidden="true"
+        />
+        {loading ? "Analyzing..." : "Analyze Journals"}
       </Button>
     </div>
   );

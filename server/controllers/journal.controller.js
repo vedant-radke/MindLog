@@ -52,18 +52,58 @@ const createJournal = async (req, res) => {
 
     res.status(201).json(newJournal);
   } catch (err) {
-    res.status(500).json({ message: "Failed to create journal", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to create journal", error: err.message });
   }
 };
 
 // GET /api/journals
 const getJournals = async (req, res) => {
   try {
-    const journals = await Journal.find({ userId: req.userId }).sort({ createdAt: -1 });
+    const journals = await Journal.find({ userId: req.userId }).sort({
+      createdAt: -1,
+    });
     res.status(200).json(journals);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch journals", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch journals", error: err.message });
   }
+};
+
+const normalizeSummary = (rawSummary = "") => {
+  const sanitized = rawSummary.replace(/\r\n/g, "\n").trim();
+  const sections = {
+    Emotion: "",
+    Solution: "",
+    Motivation: "",
+  };
+
+  const sectionRegex =
+    /(Emotion|Solution|Motivation)\s*:\s*([\s\S]*?)(?=(Emotion|Solution|Motivation)\s*:|$)/gi;
+  let match;
+
+  while ((match = sectionRegex.exec(sanitized)) !== null) {
+    const [_, rawKey, rawValue] = match;
+    const key = rawKey.charAt(0).toUpperCase() + rawKey.slice(1).toLowerCase();
+    sections[key] = rawValue
+      .replace(/^[\s-•]+/gm, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  }
+
+  const formatted = `Emotion:\n${
+    sections.Emotion || "We’re still gathering how you’ve been feeling."
+  }\n\nSolution:\n${
+    sections.Solution ||
+    "Try a grounding exercise or jot down small wins to build consistency."
+  }\n\nMotivation:\n${
+    sections.Motivation ||
+    "Keep showing up for yourself—you’re making meaningful progress."
+  }`;
+
+  return formatted.trim();
 };
 
 const getSummaryNarrative = async (req, res) => {
@@ -75,15 +115,19 @@ const getSummaryNarrative = async (req, res) => {
       .limit(7); // get last 7 journals
 
     if (journals.length === 0) {
-      return res.status(404).json({ message: "No journals found for analysis." });
+      return res
+        .status(404)
+        .json({ message: "No journals found for analysis." });
     }
 
     const combinedContent = journals
       .reverse() // so oldest appears first in summary
-      .map(j => `- ${j.content}`)
+      .map((j) => `- ${j.content}`)
       .join("\n");
 
-    const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-flash-latest" });
+    const model = genAI.getGenerativeModel({
+      model: "models/gemini-2.5-flash",
+    });
 
     const prompt = `
 You are a kind and empathetic mental health assistant. A user has written 7 journal entries.
@@ -115,15 +159,14 @@ ${combinedContent}
     });
 
     const response = await result.response;
-    const summary = response.text();
+    const rawSummary = response.text();
+    const summary = normalizeSummary(rawSummary);
 
     res.status(200).json({ summary });
-
   } catch (error) {
     console.error(" AI Summary Failed:", error.message);
     res.status(500).json({ message: "Failed to generate emotional summary." });
   }
 };
-
 
 module.exports = { createJournal, getJournals, getSummaryNarrative };
