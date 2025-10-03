@@ -118,7 +118,7 @@ export default function ChatPage() {
             </p>
           </div>
 
-          <Card className="border-emerald-100 bg-white/80 shadow-lg shadow-emerald-100/30 backdrop-blur">
+          <Card className="flex min-h-[28rem] max-h-[calc(100vh-260px)] flex-col overflow-hidden border-emerald-100 bg-white/80 shadow-lg shadow-emerald-100/30 backdrop-blur">
             <CardHeader className="flex flex-col gap-3 border-b border-emerald-100/60 bg-white/60">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-semibold text-slate-900">
@@ -136,7 +136,7 @@ export default function ChatPage() {
             </CardHeader>
 
             <CardContent
-              className="h-[28rem] space-y-4 overflow-y-auto bg-white/50 px-6 py-6"
+              className="flex-1 space-y-4 overflow-y-auto bg-white/50 px-6 py-6"
               ref={listRef}
             >
               {renderedMessages.map((message, index) => {
