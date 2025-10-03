@@ -169,4 +169,81 @@ ${combinedContent}
   }
 };
 
-module.exports = { createJournal, getJournals, getSummaryNarrative };
+const deleteJournal = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedJournal = await Journal.findOneAndDelete({
+      _id: id,
+      userId: req.userId,
+    });
+
+    if (!deletedJournal) {
+      return res.status(404).json({ message: "Journal not found." });
+    }
+
+    const user = await User.findById(req.userId);
+
+    if (user) {
+      const remainingJournals = await Journal.find({ userId: req.userId }).sort(
+        {
+          createdAt: 1,
+        }
+      );
+
+      if (remainingJournals.length === 0) {
+        user.lastJournalDate = null;
+        user.streak = 0;
+      } else {
+        let streak = 0;
+        let lastDate = null;
+
+        for (const journal of remainingJournals) {
+          const entryDate = new Date(journal.createdAt);
+          entryDate.setHours(0, 0, 0, 0);
+
+          if (!lastDate) {
+            streak = 1;
+            lastDate = entryDate;
+            continue;
+          }
+
+          const diffDays = Math.floor(
+            (entryDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+          );
+
+          if (diffDays === 0) {
+            // Same day entry → streak unchanged, keep lastDate as earliest occurrence that day
+            continue;
+          }
+
+          if (diffDays === 1) {
+            streak += 1;
+          } else {
+            streak = 1;
+          }
+
+          lastDate = entryDate;
+        }
+
+        user.lastJournalDate = lastDate;
+        user.streak = streak;
+      }
+
+      await user.save();
+    }
+
+    res.status(200).json({ message: "Journal deleted successfully." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to delete journal", error: error.message });
+  }
+};
+
+module.exports = {
+  createJournal,
+  getJournals,
+  getSummaryNarrative,
+  deleteJournal,
+};

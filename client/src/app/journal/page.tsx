@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
-import { ArrowRight, Clock, LineChart } from "lucide-react";
+import { ArrowRight, Clock, LineChart, Loader2, Trash2 } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 // ✅ Journal type definition
@@ -54,6 +54,7 @@ const getSentimentBadgeClasses = (sentiment?: string) => {
 export default function JournalPage() {
   const [journals, setJournals] = useState<Journal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -92,6 +93,48 @@ export default function JournalPage() {
 
   const entriesCount = journals.length;
   const analyzedCount = journals.filter((journal) => journal.analysis).length;
+  const handleDelete = async (journalId: string) => {
+    const token = getToken();
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this journal entry?"
+      );
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    setDeletingId(journalId);
+
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/journals/${journalId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setJournals((prev) =>
+        prev.filter((journal) => journal._id !== journalId)
+      );
+      toast.success("Journal deleted.");
+    } catch (error) {
+      console.error("Failed to delete journal entry:", error);
+      toast.error("Failed to delete journal.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const lastEntryDate = journals[0]
     ? new Date(journals[0].createdAt).toLocaleDateString(undefined, {
         month: "short",
@@ -269,23 +312,39 @@ export default function JournalPage() {
                     >
                       <CardHeader className="space-y-3">
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <Badge
-                            variant="outline"
-                            className="border-emerald-200 bg-emerald-50 text-emerald-700"
-                          >
-                            {entryDate}
-                          </Badge>
-                          {journal.analysis?.sentiment && (
+                          <div className="flex flex-wrap items-center gap-3">
                             <Badge
                               variant="outline"
-                              className={cn(
-                                "rounded-full border px-3 py-1 text-xs font-medium",
-                                sentimentClasses
-                              )}
+                              className="border-emerald-200 bg-emerald-50 text-emerald-700"
                             >
-                              Sentiment: {journal.analysis.sentiment}
+                              {entryDate}
                             </Badge>
-                          )}
+                            {journal.analysis?.sentiment && (
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  "rounded-full border px-3 py-1 text-xs font-medium",
+                                  sentimentClasses
+                                )}
+                              >
+                                Sentiment: {journal.analysis.sentiment}
+                              </Badge>
+                            )}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-rose-500 hover:bg-rose-50 hover:text-rose-600"
+                            onClick={() => handleDelete(journal._id)}
+                            disabled={deletingId === journal._id}
+                            aria-label="Delete journal entry"
+                          >
+                            {deletingId === journal._id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-4 w-4" />
+                            )}
+                          </Button>
                         </div>
                         <CardDescription className="text-base leading-relaxed text-slate-700">
                           {getPlainText(journal.content)}
