@@ -21,6 +21,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config, { isServer, dev }) => {
+    if (isServer) {
+      config.output = config.output || {};
+      config.output.chunkFilename = dev
+        ? "chunks/[id].js"
+        : "chunks/[id].[contenthash].js";
+    }
+
+    return config;
+  },
 };
 
 export default nextConfig;

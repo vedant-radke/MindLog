@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { clearToken, getToken } from "../../lib/auth";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -60,11 +61,14 @@ export default function Navbar() {
             </Button>
           ) : null}
 
-          <Link
-            href="/"
-            className="text-xl font-semibold text-gray-800 transition-colors duration-300 hover:text-green-700 sm:text-2xl"
-          >
-            MindLog
+          <Link href="/">
+            <Image
+              src="/mindlog-logo.png" 
+              alt="MindLog Logo"
+              width={150} 
+              height={50} 
+              className="transition-colors duration-300 hover:opacity-80"
+            />
           </Link>
         </div>
 
