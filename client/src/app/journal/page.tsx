@@ -20,6 +20,17 @@ import {
 import { Separator } from "../../components/ui/separator";
 import { ArrowRight, Clock, LineChart, Loader2, Trash2 } from "lucide-react";
 import { cn } from "../../lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
 
 // ✅ Journal type definition
 type Journal = {
@@ -99,16 +110,6 @@ export default function JournalPage() {
     if (!token) {
       router.push("/login");
       return;
-    }
-
-    if (typeof window !== "undefined") {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this journal entry?"
-      );
-
-      if (!confirmed) {
-        return;
-      }
     }
 
     setDeletingId(journalId);
@@ -331,20 +332,51 @@ export default function JournalPage() {
                               </Badge>
                             )}
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-rose-500 hover:bg-rose-50 hover:text-rose-600"
-                            onClick={() => handleDelete(journal._id)}
-                            disabled={deletingId === journal._id}
-                            aria-label="Delete journal entry"
-                          >
-                            {deletingId === journal._id ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Trash2 className="h-4 w-4" />
-                            )}
-                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-rose-500 hover:bg-rose-50 hover:text-rose-600"
+                                disabled={deletingId === journal._id}
+                                aria-label="Delete journal entry"
+                              >
+                                {deletingId === journal._id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete journal entry?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This will permanently remove the journal
+                                  created on {entryDate} from your history.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>
+                                  Keep entry
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  className="bg-rose-600 text-white hover:bg-rose-500"
+                                  disabled={deletingId === journal._id}
+                                  onClick={async () => {
+                                    await handleDelete(journal._id);
+                                  }}
+                                >
+                                  {deletingId === journal._id ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  ) : null}
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                         <CardDescription className="text-base leading-relaxed text-slate-700">
                           {getPlainText(journal.content)}
