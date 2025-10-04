@@ -140,7 +140,14 @@ const getSummaryNarrative = async (req, res) => {
         .json({ message: "No journals found for analysis." });
     }
 
-    const combinedContent = journals
+    const plainTextJournals = journals.map((journal) => ({
+      _id: journal._id,
+      content: decrypt(journal.content, journal.iv, journal.tag),
+      analysis: journal.analysis,
+      createdAt: journal.createdAt,
+    }));
+
+    const combinedContent = plainTextJournals
       .reverse() // so oldest appears first in summary
       .map((j) => `- ${j.content}`)
       .join("\n");
