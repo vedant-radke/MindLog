@@ -110,8 +110,8 @@ export default function LandingPage() {
         <div className="absolute left-[-12rem] top-24 -z-10 h-72 w-72 rounded-full bg-emerald-200/60 blur-3xl animate-glow-slow" />
         <div className="absolute right-[-10rem] top-48 -z-10 h-60 w-60 rounded-full bg-emerald-100/50 blur-3xl animate-glow-slow" />
 
-        <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-20">
-          <div className="flex items-center justify-between gap-4">
+        <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-16 sm:px-6 sm:pb-20 sm:pt-20">
+          <div className="flex flex-col items-center gap-4 text-center lg:flex-row lg:justify-between lg:text-left">
             <Link
               href="/"
               className="group inline-flex items-center gap-3 rounded-3xl border border-emerald-100 bg-white/80 px-4 py-2 shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-lg"
@@ -136,8 +136,8 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="mt-10 flex flex-col gap-16 lg:flex-row lg:items-center lg:gap-12">
-            <div className="flex-1 space-y-8 text-center lg:text-left">
+          <div className="mt-8 flex flex-col gap-12 lg:mt-10 lg:flex-row lg:items-center lg:gap-12">
+            <div className="flex-1 space-y-6 text-center lg:space-y-8 lg:text-left">
               <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-emerald-700/80 lg:justify-start">
                 <Badge
                   variant="outline"
@@ -160,11 +160,11 @@ export default function LandingPage() {
                 mind.
               </p>
 
-              <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+              <div className="flex w-full flex-col items-stretch gap-3 sm:mx-auto sm:max-w-md lg:mx-0 lg:w-auto lg:flex-row lg:items-center lg:justify-start">
                 <Link href={primaryCtaHref}>
                   <Button
                     size="lg"
-                    className="group gap-2 rounded-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-500 px-8 py-6 text-base font-semibold text-white shadow-lg shadow-emerald-200/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+                    className="group w-full gap-2 rounded-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-500 px-8 py-6 text-base font-semibold text-white shadow-lg shadow-emerald-200/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl lg:w-auto"
                   >
                     {primaryCtaLabel}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -174,7 +174,7 @@ export default function LandingPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="gap-2 rounded-full border-emerald-200 bg-white/80 px-8 py-6 text-base font-medium text-emerald-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-50"
+                    className="w-full gap-2 rounded-full border-emerald-200 bg-white/80 px-8 py-6 text-base font-medium text-emerald-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-50 lg:w-auto"
                   >
                     Explore the journal
                   </Button>
@@ -183,7 +183,7 @@ export default function LandingPage() {
                   <Button
                     size="lg"
                     variant="ghost"
-                    className="group gap-2 rounded-full border border-transparent px-8 py-6 text-base font-medium text-emerald-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:bg-white/70 hover:text-emerald-900"
+                    className="group w-full gap-2 rounded-full border border-transparent px-8 py-6 text-base font-medium text-emerald-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:bg-white/70 hover:text-emerald-900 lg:w-auto"
                   >
                     <Sparkles className="h-4 w-4 text-emerald-500 transition-transform group-hover:rotate-6" />
                     Read the blog
