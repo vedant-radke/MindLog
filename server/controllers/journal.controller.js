@@ -2,6 +2,7 @@ const Journal = require("../models/Journal");
 const User = require("../models/User");
 const analyzeJournal = require("../utils/analyzeJournal"); // reused if needed
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { encrypt, decrypt } = require("../utils/encryption");
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // POST /api/journals
@@ -11,9 +12,14 @@ const createJournal = async (req, res) => {
   try {
     const analysis = await analyzeJournal(content);
 
+    // encryption
+    const { encryptedContent, iv, tag } = encrypt(content);
+
     const newJournal = new Journal({
       userId: req.userId,
-      content,
+      content: encryptedContent,
+      iv,
+      tag,
       analysis,
     });
 
@@ -52,6 +58,8 @@ const createJournal = async (req, res) => {
 
     res.status(201).json(newJournal);
   } catch (err) {
+    console.log(err.message);
+
     res
       .status(500)
       .json({ message: "Failed to create journal", error: err.message });
@@ -64,11 +72,23 @@ const getJournals = async (req, res) => {
     const journals = await Journal.find({ userId: req.userId }).sort({
       createdAt: -1,
     });
-    res.status(200).json(journals);
+
+    const plainTextJournals = journals.map((journal) => ({
+      _id: journal._id,
+      content: decrypt(journal.content, journal.iv, journal.tag),
+      analysis: journal.analysis,
+      createdAt: journal.createdAt,
+    }));
+    // console.log(plainTextJournals);
+
+    res.status(200).json(plainTextJournals);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to fetch journals", error: err.message });
+    console.log(err.message);
+
+    res.status(500).json({
+      message: "Failed to fetch journals",
+      error: err.message,
+    });
   }
 };
 
@@ -235,6 +255,8 @@ const deleteJournal = async (req, res) => {
 
     res.status(200).json({ message: "Journal deleted successfully." });
   } catch (error) {
+    console.log(error.message);
+
     res
       .status(500)
       .json({ message: "Failed to delete journal", error: error.message });
