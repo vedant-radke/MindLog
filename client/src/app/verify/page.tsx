@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import Navbar from "../componenets/Navbar";
@@ -9,6 +9,14 @@ import { saveToken } from "../../lib/auth";
 import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 
 export default function VerifyPage() {
+  return (
+    <Suspense fallback={<VerifyFallback />}>
+      <VerifyContent />
+    </Suspense>
+  );
+}
+
+function VerifyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [status, setStatus] = useState<"loading" | "success" | "error">(
@@ -78,66 +86,105 @@ export default function VerifyPage() {
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-emerald-50/60">
       <Navbar />
+      <VerifyCard
+        status={status}
+        message={message}
+        email={email}
+        redirectCountdown={redirectCountdown}
+        onPrimaryAction={() =>
+          router.push(status === "success" ? "/journal" : "/login")
+        }
+        onSecondaryAction={() => router.push("/signup")}
+        isSuccess={status === "success"}
+      />
+    </div>
+  );
+}
+
+function VerifyCard({
+  status,
+  message,
+  email,
+  redirectCountdown,
+  onPrimaryAction,
+  onSecondaryAction,
+  isSuccess,
+}: {
+  status: "loading" | "success" | "error";
+  message: string;
+  email: string | null;
+  redirectCountdown: number;
+  onPrimaryAction: () => void;
+  onSecondaryAction: () => void;
+  isSuccess: boolean;
+}) {
+  return (
+    <main className="flex flex-1 items-center justify-center px-4 py-16">
+      <div className="w-full max-w-lg rounded-3xl border border-emerald-100 bg-white/80 p-10 text-center shadow-xl shadow-emerald-100/40 backdrop-blur">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+          {status === "loading" && (
+            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+          )}
+          {status === "success" && (
+            <CheckCircle2 className="h-9 w-9 text-emerald-600" />
+          )}
+          {status === "error" && (
+            <AlertTriangle className="h-8 w-8 text-amber-500" />
+          )}
+        </div>
+
+        <h1 className="text-2xl font-semibold text-slate-900">
+          {status === "success"
+            ? "Email verified"
+            : status === "error"
+            ? "Verification issue"
+            : "Verifying..."}
+        </h1>
+
+        <p className="mt-3 text-sm text-slate-600">{message}</p>
+
+        {status === "success" && email && (
+          <p className="mt-2 text-sm text-slate-500">
+            Verified for <span className="font-medium">{email}</span>
+          </p>
+        )}
+
+        {status === "success" && redirectCountdown > 0 && (
+          <p className="mt-4 text-xs uppercase tracking-wide text-emerald-600">
+            Taking you to your journal in {redirectCountdown}s
+          </p>
+        )}
+
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Button
+            onClick={onPrimaryAction}
+            className="rounded-full bg-emerald-600 px-6 text-white hover:bg-emerald-500"
+          >
+            {isSuccess ? "Go to journal" : "Back to login"}
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-full px-6"
+            onClick={onSecondaryAction}
+          >
+            Start over
+          </Button>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function VerifyFallback() {
+  return (
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-emerald-50/60">
+      <Navbar />
       <main className="flex flex-1 items-center justify-center px-4 py-16">
-        <div className="w-full max-w-lg rounded-3xl border border-emerald-100 bg-white/80 p-10 text-center shadow-xl shadow-emerald-100/40 backdrop-blur">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-            {status === "loading" && (
-              <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            )}
-            {status === "success" && (
-              <CheckCircle2 className="h-9 w-9 text-emerald-600" />
-            )}
-            {status === "error" && (
-              <AlertTriangle className="h-8 w-8 text-amber-500" />
-            )}
-          </div>
-
-          <h1 className="text-2xl font-semibold text-slate-900">
-            {status === "success"
-              ? "Email verified"
-              : status === "error"
-              ? "Verification issue"
-              : "Verifying..."}
-          </h1>
-
-          <p className="mt-3 text-sm text-slate-600">{message}</p>
-
-          {status === "success" && email && (
-            <p className="mt-2 text-sm text-slate-500">
-              Verified for <span className="font-medium">{email}</span>
-            </p>
-          )}
-
-          {status === "success" && redirectCountdown > 0 && (
-            <p className="mt-4 text-xs uppercase tracking-wide text-emerald-600">
-              Taking you to your journal in {redirectCountdown}s
-            </p>
-          )}
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            {status === "success" ? (
-              <Button
-                onClick={() => router.push("/journal")}
-                className="rounded-full bg-emerald-600 px-6 text-white hover:bg-emerald-500"
-              >
-                Go to journal
-              </Button>
-            ) : (
-              <Button
-                onClick={() => router.push("/login")}
-                className="rounded-full bg-emerald-600 px-6 text-white hover:bg-emerald-500"
-              >
-                Back to login
-              </Button>
-            )}
-            <Button
-              variant="outline"
-              className="rounded-full px-6"
-              onClick={() => router.push("/signup")}
-            >
-              Start over
-            </Button>
-          </div>
+        <div className="flex flex-col items-center gap-4 text-center">
+          <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
+          <p className="text-sm text-slate-600">
+            Loading verification details…
+          </p>
         </div>
       </main>
     </div>
