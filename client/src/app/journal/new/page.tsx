@@ -4,8 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import TextStyle from "@tiptap/extension-text-style";
-import Color from "@tiptap/extension-color";
 
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
@@ -14,7 +12,6 @@ import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 import { Separator } from "../../../components/ui/separator";
 import { getToken } from "../../../lib/auth";
-import { cn } from "../../../lib/utils";
 import Navbar from "../../componenets/Navbar";
 import { Feather, Sparkles, HeartPulse, Sun, Loader2 } from "lucide-react";
 
@@ -25,9 +22,11 @@ export default function NewJournalPage() {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
-      TextStyle,
-      Color,
+      StarterKit.configure({
+        // Disable bold and italic
+        bold: false,
+        italic: false,
+      }),
       Placeholder.configure({
         placeholder: "Start writing your thoughts...",
       }),
@@ -100,29 +99,6 @@ export default function NewJournalPage() {
     editor.chain().focus().insertContent(`${prompt} `).run();
   };
 
-  const ToolbarButton = ({
-    onClick,
-    isActive,
-    label,
-  }: {
-    onClick: () => void;
-    isActive?: boolean;
-    label: string;
-  }) => (
-    <Button
-      type="button"
-      size="sm"
-      variant="ghost"
-      className={cn(
-        "h-8 rounded-full border border-transparent px-3 text-xs font-medium text-slate-600",
-        isActive && "border-emerald-300 bg-emerald-50 text-emerald-700"
-      )}
-      onClick={onClick}
-    >
-      {label}
-    </Button>
-  );
-
   return (
     <>
       <Navbar />
@@ -152,56 +128,17 @@ export default function NewJournalPage() {
 
           <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
             <div className="space-y-6">
-              <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-emerald-100 bg-white/70 p-3 shadow-sm">
-                <ToolbarButton
-                  label="Bold"
-                  isActive={editor?.isActive("bold")}
-                  onClick={() => editor?.chain().focus().toggleBold().run()}
-                />
-                <ToolbarButton
-                  label="Italic"
-                  isActive={editor?.isActive("italic")}
-                  onClick={() => editor?.chain().focus().toggleItalic().run()}
-                />
-                <ToolbarButton
-                  label="Bullet list"
-                  isActive={editor?.isActive("bulletList")}
-                  onClick={() =>
-                    editor?.chain().focus().toggleBulletList().run()
-                  }
-                />
-                <ToolbarButton
-                  label="Numbered list"
-                  isActive={editor?.isActive("orderedList")}
-                  onClick={() =>
-                    editor?.chain().focus().toggleOrderedList().run()
-                  }
-                />
-                <ToolbarButton
-                  label="Highlight"
-                  isActive={editor?.isActive("textStyle", { color: "#047857" })}
-                  onClick={() => {
-                    if (!editor) return;
-                    const active = editor.isActive("textStyle", {
-                      color: "#047857",
-                    });
-                    editor
-                      .chain()
-                      .focus()
-                      .setColor(active ? "inherit" : "#047857")
-                      .run();
-                  }}
-                />
-                <div className="ml-auto text-xs text-slate-500">
+              <div className="flex justify-end rounded-2xl border border-emerald-100 bg-white/70 p-3 shadow-sm">
+                <div className="text-xs text-slate-500">
                   {wordCount} {wordCount === 1 ? "word" : "words"}
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-emerald-100 bg-white/80 p-6 shadow-lg shadow-emerald-100/40">
+              <div className="rounded-3xl border border-emerald-100 bg-white/80 p-8 shadow-lg shadow-emerald-100/40 min-h-[400px]">
                 {editor ? (
                   <EditorContent
                     editor={editor}
-                    className="prose max-w-full text-slate-800 focus:outline-none prose-headings:font-semibold prose-headings:text-slate-900"
+                    className="prose max-w-full text-slate-800 focus:outline-none prose-lg prose-headings:font-semibold prose-headings:text-slate-900 [&_.ProseMirror]:min-h-[300px] [&_.ProseMirror]:text-lg [&_.ProseMirror]:leading-relaxed [&_.ProseMirror]:focus:outline-none"
                   />
                 ) : null}
               </div>

@@ -32,7 +32,7 @@ import {
   AlertDialogTrigger,
 } from "../../components/ui/alert-dialog";
 
-// ✅ Journal type definition
+// Journal type definition
 type Journal = {
   _id: string;
   content: string;
