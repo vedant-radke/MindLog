@@ -4,17 +4,10 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../componenets/Navbar";
 import { getToken } from "../../lib/auth";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import { ArrowUpCircle, MessageCircle } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
 
 type Message = {
   sender: "user" | "bot";
@@ -28,6 +21,7 @@ export default function ChatPage() {
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
   const listRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const storedToken = getToken();
@@ -44,6 +38,13 @@ export default function ChatPage() {
     }
   }, [messages]);
 
+  // Keep the input focused so the user can continue typing without clicking
+  useEffect(() => {
+    if (inputRef.current && !loading) {
+      inputRef.current.focus();
+    }
+  }, [loading, messages]);
+
   const handleSend = async () => {
     if (!input.trim() || !token) return;
 
@@ -59,7 +60,10 @@ export default function ChatPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ message: userMessage.text }),
+        body: JSON.stringify({
+          message: userMessage.text,
+          isFirstMessage: messages.length === 0,
+        }),
       });
 
       const data = await res.json();
@@ -86,6 +90,13 @@ export default function ChatPage() {
     handleSend();
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSend();
+    }
+  };
+
   const introMessage = useMemo(
     () => ({
       sender: "bot" as const,
@@ -97,94 +108,106 @@ export default function ChatPage() {
   const renderedMessages = messages.length ? messages : [introMessage];
 
   return (
-    <>
+    <div className="flex h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-emerald-50/60">
       <Navbar />
-      <main className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/60 px-4 py-12">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.14),transparent_65%)]" />
-        <div className="relative mx-auto flex max-w-4xl flex-col gap-8">
-          <div className="space-y-3 text-center">
-            <Badge
-              variant="outline"
-              className="border-emerald-200 bg-emerald-50 text-emerald-700"
-            >
-              Guided conversations
-            </Badge>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-              Chat with your mindfulness companion
-            </h1>
-            <p className="mx-auto max-w-xl text-sm text-slate-600">
-              Explore grounding exercises, emotional check-ins, and reflections
-              tailored to how you’re feeling right now.
-            </p>
-          </div>
 
-          <Card className="flex min-h-[28rem] max-h-[calc(100vh-260px)] flex-col overflow-hidden border-emerald-100 bg-white/80 shadow-lg shadow-emerald-100/30 backdrop-blur">
-            <CardHeader className="flex flex-col gap-3 border-b border-emerald-100/60 bg-white/60">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold text-slate-900">
-                  MindLog companion
-                </CardTitle>
-                <Badge className="flex items-center gap-1 bg-emerald-100 text-emerald-700">
-                  <MessageCircle className="h-3.5 w-3.5" />
-                  Online
-                </Badge>
+      <div className="relative flex flex-1 flex-col overflow-hidden">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_70%)]" />
+
+        <header className="relative z-10 border-b border-emerald-100/60 bg-white/80 backdrop-blur-sm">
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-100">
+                <MessageCircle className="h-5 w-5 text-emerald-600" />
               </div>
-              <p className="text-sm text-slate-500">
-                This space is private. Responses synthesize mindfulness research
-                and friendly guidance—never medical advice.
-              </p>
-            </CardHeader>
+              <div className="space-y-0.5">
+                <h1 className="text-base font-semibold text-slate-900">
+                  MindLog Companion
+                </h1>
+                <p className="text-xs text-slate-500">
+                  Your mindful reflection partner
+                </p>
+              </div>
+            </div>
+            <Badge className="flex items-center gap-2 bg-emerald-100 text-emerald-700">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              Online
+            </Badge>
+          </div>
+        </header>
 
-            <CardContent
-              className="flex-1 space-y-4 overflow-y-auto bg-white/50 px-6 py-6"
-              ref={listRef}
-            >
-              {renderedMessages.map((message, index) => {
-                const isUser = message.sender === "user";
+        <main
+          ref={listRef}
+          className="relative flex-1 overflow-y-auto px-4 py-6 sm:px-6"
+        >
+          <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 pb-16">
+            {renderedMessages.map((message, index) => {
+              const isUser = message.sender === "user";
 
-                return (
+              return (
+                <div
+                  key={`${message.sender}-${index}-${message.text.slice(
+                    0,
+                    10
+                  )}`}
+                  className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                >
                   <div
-                    key={`${message.sender}-${index}-${message.text.slice(
-                      0,
-                      10
-                    )}`}
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm transition-all ${
+                    className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm transition-all ${
                       isUser
-                        ? "ml-auto bg-emerald-600 text-white"
-                        : "mr-auto bg-emerald-50 text-slate-800"
+                        ? "bg-emerald-600 text-white"
+                        : "border border-emerald-100/60 bg-white/90 text-slate-800"
                     }`}
                   >
                     {message.text}
                   </div>
-                );
-              })}
-            </CardContent>
+                </div>
+              );
+            })}
 
-            <CardFooter className="border-t border-emerald-100/60 bg-white/70 px-6 py-4">
-              <form
-                className="flex w-full items-center gap-3"
-                onSubmit={handleSubmit}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="flex items-center gap-3 rounded-2xl border border-emerald-100/60 bg-white/90 px-4 py-3 text-sm text-slate-600 shadow-sm">
+                  <div className="flex gap-1">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 [animation-delay:0.2s]" />
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 [animation-delay:0.4s]" />
+                  </div>
+                  <span>MindLog is thinking...</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
+
+        <footer className="relative border-t border-emerald-100/60 bg-white/90 backdrop-blur-sm">
+          <div className="mx-auto flex w-full max-w-5xl flex-col gap-2 px-4 py-4 sm:px-6">
+            <form onSubmit={handleSubmit} className="flex items-center gap-3">
+              <Input
+                ref={inputRef}
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Share what’s on your mind... (Press Enter to send)"
+                className="h-12 flex-1 rounded-2xl border-emerald-200 bg-white/90 text-base focus:border-emerald-400 focus:ring-emerald-300"
+                disabled={loading || !token}
+                autoFocus
+              />
+              <Button
+                type="submit"
+                disabled={loading || !token || !input.trim()}
+                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 p-0 text-white transition hover:bg-emerald-500 disabled:opacity-50"
               >
-                <Input
-                  value={input}
-                  onChange={(event) => setInput(event.target.value)}
-                  placeholder="Share what’s on your mind..."
-                  className="h-11 flex-1 rounded-2xl border-emerald-100 bg-white/80 focus:border-emerald-300 focus:ring-emerald-200"
-                  disabled={loading || !token}
-                />
-                <Button
-                  type="submit"
-                  disabled={loading || !token}
-                  className="inline-flex h-11 items-center gap-2 rounded-2xl bg-emerald-600 px-5 text-white transition hover:bg-emerald-500 disabled:opacity-70"
-                >
-                  {loading ? "Sending..." : "Send"}
-                  <ArrowUpCircle className="h-4 w-4" />
-                </Button>
-              </form>
-            </CardFooter>
-          </Card>
-        </div>
-      </main>
-    </>
+                <Send className="h-5 w-5" />
+              </Button>
+            </form>
+            <p className="text-center text-xs text-slate-500">
+              This space is private. Your reflections stay between you and
+              MindLog.
+            </p>
+          </div>
+        </footer>
+      </div>
+    </div>
   );
 }
