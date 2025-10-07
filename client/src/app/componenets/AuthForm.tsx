@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +20,15 @@ import {
 import { Badge } from "../../components/ui/badge";
 import { Label } from "../../components/ui/label";
 import { saveToken } from "../../lib/auth";
-import { ArrowRight, Feather, ShieldCheck, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Feather,
+  MailCheck,
+  MailWarning,
+  RefreshCcw,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 
 type Mode = "login" | "signup";
 
@@ -57,6 +66,11 @@ const highlightItems = [
 
 export default function AuthForm({ mode }: Props) {
   const router = useRouter();
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<
+    string | null
+  >(null);
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
+  const [resendLoading, setResendLoading] = useState(false);
   const schema = baseSchema.superRefine((data, ctx) => {
     if (mode === "signup" && !data.name?.trim()) {
       ctx.addIssue({
@@ -76,6 +90,11 @@ export default function AuthForm({ mode }: Props) {
   });
 
   const onSubmit = async (data: FormData) => {
+    setInfoMessage(null);
+    if (mode === "login") {
+      setPendingVerificationEmail(null);
+    }
+
     try {
       const url =
         mode === "login"
@@ -85,9 +104,19 @@ export default function AuthForm({ mode }: Props) {
       const res = await axios.post(url, data);
       const token = res.data.token;
 
+      if (mode === "signup") {
+        setPendingVerificationEmail(data.email);
+        setInfoMessage(
+          res.data.message ||
+            "We just sent you a confirmation email. Please verify to continue."
+        );
+        toast.success("Almost there! Check your inbox to verify your email.");
+        return;
+      }
+
       if (token) {
         saveToken(token);
-        toast.success(`${mode === "login" ? "Logged in" : "Account created"}!`);
+        toast.success("Logged in!");
         router.push("/journal");
       }
 
@@ -98,9 +127,44 @@ export default function AuthForm({ mode }: Props) {
       //   window.location.href = "/login";
       // }, 600000);
     } catch (err: unknown) {
+      const error = err as AxiosError<{
+        message?: string;
+        needsVerification?: boolean;
+      }>;
+      const serverMessage = error.response?.data?.message;
+
+      if (
+        mode === "login" &&
+        error.response?.status === 403 &&
+        error.response.data?.needsVerification
+      ) {
+        setPendingVerificationEmail(data.email);
+        setInfoMessage(
+          serverMessage || "Please verify your email before logging in."
+        );
+        toast.info("Please verify your email before logging in.");
+        return;
+      }
+
+      console.log("🔥 ERROR:", serverMessage);
+      toast.error(serverMessage || "Auth failed");
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (!pendingVerificationEmail) return;
+    try {
+      setResendLoading(true);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/resend-verification`,
+        { email: pendingVerificationEmail }
+      );
+      toast.success("Verification email sent.");
+    } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
-      console.log("🔥 ERROR:", error.response?.data?.message);
-      toast.error(error.response?.data?.message || "Auth failed");
+      toast.error(error.response?.data?.message || "Failed to resend email");
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -155,115 +219,184 @@ export default function AuthForm({ mode }: Props) {
             </p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {mode === "signup" && (
+            {mode === "signup" && pendingVerificationEmail ? (
+              <div className="space-y-6 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+                  <MailCheck className="h-8 w-8 text-emerald-600" />
+                </div>
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="name"
-                    className="text-sm font-medium text-slate-700"
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    Confirm your email to get started
+                  </h3>
+                  <p className="text-sm text-slate-600">
+                    {infoMessage ||
+                      "We just sent a verification link to confirm your email."}
+                  </p>
+                  <p className="text-sm text-slate-500">
+                    Email sent to{" "}
+                    <span className="font-medium">
+                      {pendingVerificationEmail}
+                    </span>
+                  </p>
+                  <p className="text-sm text-slate-500">
+                    Didn’t receive it? You can resend a new link below.
+                  </p>
+                </div>
+                <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                  <Button
+                    type="button"
+                    onClick={handleResendVerification}
+                    disabled={resendLoading}
+                    className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-6 text-white shadow hover:bg-emerald-500 disabled:opacity-70"
                   >
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    placeholder="What should we call you?"
-                    autoComplete="name"
-                    {...register("name")}
-                    className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
-                  />
-                  {errors.name && (
-                    <p className="text-sm text-rose-500">
-                      {errors.name.message as string}
-                    </p>
+                    {resendLoading ? "Sending..." : "Resend email"}
+                    <RefreshCcw className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="rounded-full px-6"
+                    onClick={() => router.push("/login")}
+                  >
+                    Back to login
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                {infoMessage && (
+                  <div className="mb-5 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                    <MailWarning className="h-5 w-5 flex-shrink-0" />
+                    <div className="space-y-2">
+                      <p>{infoMessage}</p>
+                      {pendingVerificationEmail && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="px-0 text-amber-900 hover:bg-transparent hover:underline"
+                          onClick={handleResendVerification}
+                          disabled={resendLoading}
+                        >
+                          {resendLoading
+                            ? "Sending..."
+                            : "Resend verification email"}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                  {mode === "signup" && (
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="name"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Name
+                      </Label>
+                      <Input
+                        id="name"
+                        placeholder="What should we call you?"
+                        autoComplete="name"
+                        {...register("name")}
+                        className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
+                      />
+                      {errors.name && (
+                        <p className="text-sm text-rose-500">
+                          {errors.name.message as string}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="email"
+                      className="text-sm font-medium text-slate-700"
+                    >
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      {...register("email")}
+                      className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
+                    />
+                    {errors.email && (
+                      <p className="text-sm text-rose-500">
+                        {errors.email.message as string}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="password"
+                      className="text-sm font-medium text-slate-700"
+                    >
+                      Password
+                    </Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      autoComplete={
+                        mode === "login" ? "current-password" : "new-password"
+                      }
+                      placeholder="Create a secure password"
+                      {...register("password")}
+                      className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
+                    />
+                    {errors.password && (
+                      <p className="text-sm text-rose-500">
+                        {errors.password.message as string}
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="group flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 py-3 text-base font-semibold text-white transition-colors hover:bg-emerald-500 disabled:opacity-80"
+                  >
+                    {isSubmitting
+                      ? mode === "login"
+                        ? "Signing you in..."
+                        : "Creating your space..."
+                      : mode === "login"
+                      ? "Log in"
+                      : "Sign up"}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </form>
+
+                <div className="mt-6 text-center text-sm text-slate-500">
+                  {mode === "login" ? (
+                    <>
+                      New to MindLog?{" "}
+                      <Link
+                        href="/signup"
+                        className="font-medium text-emerald-600 underline-offset-4 transition-colors hover:text-emerald-700 hover:underline"
+                      >
+                        Create an account
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      Already a member?{" "}
+                      <Link
+                        href="/login"
+                        className="font-medium text-emerald-600 underline-offset-4 transition-colors hover:text-emerald-700 hover:underline"
+                      >
+                        Log in here
+                      </Link>
+                    </>
                   )}
                 </div>
-              )}
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="email"
-                  className="text-sm font-medium text-slate-700"
-                >
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  {...register("email")}
-                  className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
-                />
-                {errors.email && (
-                  <p className="text-sm text-rose-500">
-                    {errors.email.message as string}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="password"
-                  className="text-sm font-medium text-slate-700"
-                >
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  autoComplete={
-                    mode === "login" ? "current-password" : "new-password"
-                  }
-                  placeholder="Create a secure password"
-                  {...register("password")}
-                  className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
-                />
-                {errors.password && (
-                  <p className="text-sm text-rose-500">
-                    {errors.password.message as string}
-                  </p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="group flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 py-3 text-base font-semibold text-white transition-colors hover:bg-emerald-500 disabled:opacity-80"
-              >
-                {isSubmitting
-                  ? mode === "login"
-                    ? "Signing you in..."
-                    : "Creating your space..."
-                  : mode === "login"
-                  ? "Log in"
-                  : "Sign up"}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </form>
-
-            <div className="mt-6 text-center text-sm text-slate-500">
-              {mode === "login" ? (
-                <>
-                  New to MindLog?{" "}
-                  <Link
-                    href="/signup"
-                    className="font-medium text-emerald-600 underline-offset-4 transition-colors hover:text-emerald-700 hover:underline"
-                  >
-                    Create an account
-                  </Link>
-                </>
-              ) : (
-                <>
-                  Already a member?{" "}
-                  <Link
-                    href="/login"
-                    className="font-medium text-emerald-600 underline-offset-4 transition-colors hover:text-emerald-700 hover:underline"
-                  >
-                    Log in here
-                  </Link>
-                </>
-              )}
-            </div>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>

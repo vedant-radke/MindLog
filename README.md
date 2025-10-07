@@ -1,4 +1,3 @@
-
 # MentalHealth Project
 
 ## Overview
@@ -9,8 +8,9 @@ This project includes a Node.js script for sending email notifications to users 
 
 ## Key Features
 
-*   **Automated Email Notifications:** Sends reminders to users who haven't submitted a journal entry for the day.
-*   **Streak Tracking:** Integrates with a user streak system to encourage daily engagement.
+- **Automated Email Notifications:** Sends reminders to users who haven't submitted a journal entry for the day.
+- **Streak Tracking:** Integrates with a user streak system to encourage daily engagement.
+- **Email Verification:** New signups receive a verification link; unverified accounts cannot log in until confirmed.
 
 ## `notifyMissedJournal.js`
 
@@ -18,15 +18,15 @@ This script is responsible for scheduling and sending the missed journal notific
 
 ### Functionality
 
-*   **Cron Scheduling:** Uses `node-cron` to schedule a daily check at 9 PM (21:00).
-*   **User Query:** Fetches users from the database who have an active streak but haven't written a journal entry today.
-*   **Email Sending:** Sends personalized email reminders using the `sendEmail` utility.
+- **Cron Scheduling:** Uses `node-cron` to schedule a daily check at 9 PM (21:00).
+- **User Query:** Fetches users from the database who have an active streak but haven't written a journal entry today.
+- **Email Sending:** Sends personalized email reminders using the `sendEmail` utility.
 
 ### Dependencies
 
-*   `node-cron`: For scheduling the task.
-*   `User` model: Mongoose model for querying user data.
-*   `sendEmail` utility: Function for sending emails.
+- `node-cron`: For scheduling the task.
+- `User` model: Mongoose model for querying user data.
+- `sendEmail` utility: Function for sending emails.
 
 ### Setup
 
@@ -38,20 +38,21 @@ This script is responsible for scheduling and sending the missed journal notific
 
 2.  **Configuration:**
 
-    *   Ensure your `.env` file includes the necessary email configuration for the `sendEmail` utility.
-    *   Set up your MongoDB connection for the `User` model.
+    - Ensure your `.env` file includes the necessary email configuration for the `sendEmail` utility.
+    - Set up your MongoDB connection for the `User` model.
+    - Provide `CLIENT_URL`, `EMAIL_VERIFICATION_EXPIRY_HOURS`, and (optionally) `EMAIL_VERIFICATION_RESEND_MINUTES` environment variables for the verification flow.
 
 ### Scheduling
 
-The script is set to run daily at 9 PM.  You can adjust the cron schedule in `notifyMissedJournal.js` as needed.
+The script is set to run daily at 9 PM. You can adjust the cron schedule in `notifyMissedJournal.js` as needed.
 
 ## Models
 
-*   **User**: Mongoose model to represent users in the database.  Includes fields like `streak`, `lastJournalDate`, `email`, and `name`.
+- **User**: Mongoose model to represent users in the database. Includes fields like `streak`, `lastJournalDate`, `email`, and `name`.
 
 ## Utilities
 
-*   **sendEmail**: Reusable function to send emails.
+- **sendEmail**: Reusable function to send emails.
 
 ## Contributing
 
