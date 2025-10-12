@@ -11,6 +11,8 @@ import {
   MoonStar,
   NotebookPen,
   Sparkles,
+  Menu,
+  X,
 } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
@@ -110,18 +112,48 @@ export default function LandingPage() {
   const primaryCtaLabel = isLoggedIn
     ? "Open your sanctuary"
     : "Begin a calm ritual";
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsNavOpen(false);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const closeNav = () => setIsNavOpen(false);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#eef2f8] via-white to-[#f5f7fb] text-slate-800">
       <header className="border-b border-[#d6e1f1] bg-white/90">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
-          <Link
-            href="/"
-            className="inline-flex items-center text-2xl font-bold tracking-tight text-slate-900 transition-colors duration-200 hover:text-[#4f6f8f]"
-          >
-            MindLog
-          </Link>
-          <nav className="flex flex-wrap items-center gap-2 text-sm text-[#4f6f8f]">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-6 py-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center justify-between gap-3">
+            <Link
+              href="/"
+              className="inline-flex items-center text-2xl font-bold tracking-tight text-slate-900 transition-colors duration-200 hover:text-[#4f6f8f]"
+            >
+              MindLog
+            </Link>
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center text-[#4f6f8f] hover:text-[#3b5a78] focus:outline-none md:hidden"
+              onClick={() => setIsNavOpen((prev) => !prev)}
+              aria-label="Toggle navigation menu"
+              aria-expanded={isNavOpen}
+            >
+              {isNavOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </button>
+          </div>
+
+          <nav className="hidden flex-wrap items-center gap-2 text-sm text-[#4f6f8f] md:flex">
             <Link
               href="#features"
               className="rounded-none border border-transparent px-3 py-2 transition-colors hover:border-[#bcd1e6] hover:bg-[#f5f7fb]"
@@ -147,6 +179,43 @@ export default function LandingPage() {
               Get Started
             </Link>
           </nav>
+        </div>
+
+        <div
+          className={`md:hidden ${
+            isNavOpen ? "block" : "hidden"
+          } border-t border-[#d6e1f1] bg-white/95`}
+        >
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-4 text-sm text-[#4f6f8f]">
+            <Link
+              href="#features"
+              className="rounded-none border border-transparent px-3 py-2 text-left transition-colors hover:border-[#bcd1e6] hover:bg-[#f5f7fb]"
+              onClick={closeNav}
+            >
+              Features
+            </Link>
+            <Link
+              href="#ritual"
+              className="rounded-none border border-transparent px-3 py-2 text-left transition-colors hover:border-[#bcd1e6] hover:bg-[#f5f7fb]"
+              onClick={closeNav}
+            >
+              Ritual
+            </Link>
+            <Link
+              href="/blogs"
+              className="rounded-none border border-transparent px-3 py-2 text-left transition-colors hover:border-[#bcd1e6] hover:bg-[#f5f7fb]"
+              onClick={closeNav}
+            >
+              Blog
+            </Link>
+            <Link
+              href={primaryCtaHref}
+              className="rounded-none border border-[#4f6f8f] px-3 py-2 text-left font-medium text-[#4f6f8f] transition-colors hover:bg-[#4f6f8f] hover:text-white"
+              onClick={closeNav}
+            >
+              Get Started
+            </Link>
+          </div>
         </div>
       </header>
 
