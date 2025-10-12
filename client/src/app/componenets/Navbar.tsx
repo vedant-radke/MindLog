@@ -53,7 +53,7 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-[#d6e1f1] bg-white/90 px-4 py-3 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           {canGoBack ? (
             <Button
@@ -75,47 +75,42 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="flex items-center justify-between gap-3">
-          <nav className="hidden flex-wrap items-center gap-2 md:flex">
-            <Link href="/journal" className={getLinkClasses("/journal")}>
-              My Journals
-            </Link>
-            <Link
-              href="/journal/new"
-              className={getLinkClasses("/journal/new")}
-            >
-              Write New
-            </Link>
-            <Link href="/chat" className={getLinkClasses("/chat")}>
-              Chat
-            </Link>
-            <Link href="/blogs" className={getLinkClasses("/blogs")}>
-              Blogs
-            </Link>
-            <Button
-              onClick={handleLogout}
-              className="rounded-none border border-[#4f6f8f] px-3 py-2 text-sm font-medium text-[#4f6f8f] hover:bg-[#4f6f8f] hover:text-white"
-              variant="outline"
-            >
-              Logout
-            </Button>
-          </nav>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="inline-flex h-10 w-10 items-center justify-center text-[#4f6f8f] hover:bg-[#eef2f9] md:hidden"
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+          aria-expanded={isMenuOpen}
+        >
+          {isMenuOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
+        </Button>
 
+        <nav className="hidden flex-wrap items-center gap-2 md:flex">
+          <Link href="/journal" className={getLinkClasses("/journal")}>
+            My Journals
+          </Link>
+          <Link href="/journal/new" className={getLinkClasses("/journal/new")}>
+            Write New
+          </Link>
+          <Link href="/chat" className={getLinkClasses("/chat")}>
+            Chat
+          </Link>
+          <Link href="/blogs" className={getLinkClasses("/blogs")}>
+            Blogs
+          </Link>
           <Button
-            variant="ghost"
-            size="icon"
-            className="inline-flex h-10 w-10 items-center justify-center text-[#4f6f8f] hover:bg-[#eef2f9] md:hidden"
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
+            onClick={handleLogout}
+            className="rounded-none border border-[#4f6f8f] px-3 py-2 text-sm font-medium text-[#4f6f8f] hover:bg-[#4f6f8f] hover:text-white"
+            variant="outline"
           >
-            {isMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            Logout
           </Button>
-        </div>
+        </nav>
       </div>
 
       <div
