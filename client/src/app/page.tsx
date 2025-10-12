@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   ArrowRight,
+  Bookmark,
+  Compass,
+  Heart,
   MoonStar,
   NotebookPen,
   Sparkles,
-  Waves,
-  Wind,
 } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
@@ -22,63 +23,60 @@ import {
 import { Separator } from "../components/ui/separator";
 import { getToken } from "../lib/auth";
 
-const serenityFeatures = [
+const supportFeatures = [
   {
-    title: "Breath-paced prompts",
+    title: "Nurturing prompts",
     description:
-      "Soft guidance that mirrors the cadence of a calm inhale and exhale—never rushed, always grounded.",
+      "Light, personalised journaling invitations that let you meet yourself exactly where you are.",
     icon: NotebookPen,
   },
   {
-    title: "Twilight reflections",
+    title: "Gentle reflections",
     description:
-      "A hush-friendly palette and night mode designed for quiet evenings when you need gentle clarity.",
+      "Mood snapshots, breathing cues, and micro-wins delivered in a whisper—not a dashboard.",
+    icon: Heart,
+  },
+  {
+    title: "Quiet routines",
+    description:
+      "Soft reminders and evening wind-downs that help you keep a promise to your calm.",
     icon: MoonStar,
   },
   {
-    title: "Tranquil pattern insights",
+    title: "Emotion library",
     description:
-      "See subtle shifts in mood without charts shouting at you—just thoughtful cues to guide your next step.",
+      "Bookmark feelings, track breakthroughs, and remember the practices that bring you home.",
+    icon: Bookmark,
+  },
+  {
+    title: "Compass guidance",
+    description:
+      "See gentle trends in your energy so you know when to rest, reach out, or rejoice.",
+    icon: Compass,
+  },
+  {
+    title: "Moments of awe",
+    description:
+      "Curated stories, mindful art, and soundscapes to soften the edges of your day.",
     icon: Sparkles,
   },
-  {
-    title: "Ambient companions",
-    description:
-      "Optional ambient soundscapes and breathing nudges that keep your session feeling like solitude, not a task.",
-    icon: Waves,
-  },
 ];
 
-const solitudeRituals = [
+const ritualSteps = [
   {
-    title: "Arrive",
+    title: "Arrive softly",
     description:
-      "Dim the noise with a grounding breath, check in quietly, and notice what your mind is holding onto.",
+      "Open MindLog to a welcoming breath, a calming sound, and one question that grounds you.",
   },
   {
-    title: "Observe",
+    title: "Listen inward",
     description:
-      "Ease into prompts that respond to your tone, helping thoughts unfold without judgement or hurry.",
+      "Write or speak freely. Prompts adapt to your tone, offering space when words slow down.",
   },
   {
-    title: "Release",
+    title: "Integrate",
     description:
-      "Close with a reflection and a simple breathing cue, so you leave lighter than you arrived.",
-  },
-];
-
-const hushTestimonials = [
-  {
-    quote:
-      "MindLog feels like a studio for my interior life. I leave every session softer and more certain of myself.",
-    name: "Kai R.",
-    role: "Writer & mindful runner",
-  },
-  {
-    quote:
-      "It’s the only journaling space that helps me balance solitude with insight. Every detail is calm on purpose.",
-    name: "Leena A.",
-    role: "Design lead, night owl",
+      "Close with a micro-summary, a self-kind action, or a pause cue that keeps the calm with you.",
   },
 ];
 
@@ -98,213 +96,215 @@ export default function LandingPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "smooth";
+
+    return () => {
+      root.style.scrollBehavior = previousBehavior;
+    };
+  }, []);
+
   const primaryCtaHref = isLoggedIn ? "/journal" : "/signup";
   const primaryCtaLabel = isLoggedIn
     ? "Open your sanctuary"
     : "Begin a calm ritual";
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-stone-100 text-stone-900">
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(209,250,229,0.55),_transparent_70%)]" />
-        <div className="absolute left-[-12rem] top-24 -z-10 h-72 w-72 rounded-full bg-emerald-200/60 blur-3xl animate-glow-slow" />
-        <div className="absolute right-[-10rem] top-48 -z-10 h-60 w-60 rounded-full bg-emerald-100/50 blur-3xl animate-glow-slow" />
-
-        <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-16 sm:px-6 sm:pb-20 sm:pt-20">
-          <div className="flex flex-col items-center gap-4 text-center lg:flex-row lg:justify-between lg:text-left">
+    <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#eef2f8] via-white to-[#f5f7fb] text-slate-800">
+      <header className="border-b border-[#d6e1f1] bg-white/90">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center text-2xl font-bold tracking-tight text-slate-900 transition-colors duration-200 hover:text-[#4f6f8f]"
+          >
+            MindLog
+          </Link>
+          <nav className="flex flex-wrap items-center gap-2 text-sm text-[#4f6f8f]">
             <Link
-              href="/"
-              className="group inline-flex items-center gap-3 rounded-3xl border border-emerald-100 bg-white/80 px-4 py-2 shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-lg"
+              href="#features"
+              className="rounded-none border border-transparent px-3 py-2 transition-colors hover:border-[#bcd1e6] hover:bg-[#f5f7fb]"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 via-emerald-600 to-emerald-500 text-white shadow-inner">
-                <Image
-                  src="/globe.svg"
-                  alt="MindLog mark"
-                  width={24}
-                  height={24}
-                  className="h-6 w-6"
-                />
-              </span>
-              <div className="flex flex-col text-left">
-                <span className="text-lg font-semibold tracking-tight text-stone-900">
-                  MindLog
-                </span>
-                <span className="text-xs uppercase tracking-[0.38em] text-emerald-500">
-                  Calm journaling
-                </span>
-              </div>
+              Features
             </Link>
+            <Link
+              href="#ritual"
+              className="rounded-none border border-transparent px-3 py-2 transition-colors hover:border-[#bcd1e6] hover:bg-[#f5f7fb]"
+            >
+              Ritual
+            </Link>
+            <Link
+              href="/blogs"
+              className="rounded-none border border-transparent px-3 py-2 transition-colors hover:border-[#bcd1e6] hover:bg-[#f5f7fb]"
+            >
+              Blog
+            </Link>
+            <Link
+              href={primaryCtaHref}
+              className="rounded-none border border-[#4f6f8f] px-3 py-2 font-medium text-[#4f6f8f] transition-colors hover:bg-[#4f6f8f] hover:text-white"
+            >
+              Get Started
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(116,155,196,0.18),_transparent_60%)]" />
+
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-16 px-6 pb-20 pt-16 lg:flex-row lg:items-center">
+          <div className="flex-1 space-y-8 text-center lg:max-w-xl lg:text-left">
+            <div className="inline-flex items-center justify-center gap-2 border border-slate-200/80 bg-white/80 px-4 py-1 text-xs font-medium uppercase tracking-[0.35em] text-slate-500 backdrop-blur-sm lg:justify-start">
+              MindLog — gentle journaling ritual
+            </div>
+            <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl md:text-6xl [font-family:var(--font-newsreader)]">
+              A quiet space to hear yourself again.
+            </h1>
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg lg:mx-0">
+              MindLog guides soft, meaningful check-ins for emotional clarity.
+              Arrive for five minutes, leave with lighter shoulders and a kinder
+              relationship with your thoughts.
+            </p>
+
+            <div className="flex w-full flex-col items-stretch gap-2 sm:mx-auto sm:max-w-lg lg:mx-0 lg:w-full lg:flex-row lg:items-center lg:justify-start">
+              <Link href={primaryCtaHref}>
+                <Button
+                  size="sm"
+                  className="group w-full gap-2 rounded-none bg-[#4f6f8f] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#9ab7d3]/40 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#456380] sm:w-auto"
+                >
+                  {primaryCtaLabel}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+              <Link href="/journal">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full gap-2 rounded-none border-[#bcd1e6] bg-white/80 px-5 py-3 text-sm font-medium text-[#2f4c63] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#9ab7d3] hover:bg-[#eef4fb] sm:w-auto"
+                >
+                  Preview the journal
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          <div className="mt-8 flex flex-col gap-12 lg:mt-10 lg:flex-row lg:items-center lg:gap-12">
-            <div className="flex-1 space-y-6 text-center lg:space-y-8 lg:text-left">
-              <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-emerald-700/80 lg:justify-start">
-                <Badge
-                  variant="outline"
-                  className="border-emerald-200 bg-white/70 backdrop-blur"
-                >
-                  Mind like still water
-                </Badge>
-                <span className="hidden h-1.5 w-1.5 rounded-full bg-emerald-200 lg:inline-block" />
-                <span className="text-xs uppercase tracking-[0.35em] text-emerald-500">
-                  Calm technology for quiet minds
-                </span>
-              </div>
-
-              <h1 className="text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl md:text-6xl font-serif">
-                Find a quiet home for your thoughts.
-              </h1>
-              <p className="mx-auto max-w-2xl text-base leading-relaxed text-stone-600 sm:text-lg lg:mx-0">
-                MindLog is a serene workspace for self-reflection, crafted for
-                solitude, guided by breath, and tuned to the rhythm of your
-                mind.
-              </p>
-
-              <div className="flex w-full flex-col items-stretch gap-3 sm:mx-auto sm:max-w-md lg:mx-0 lg:w-auto lg:flex-row lg:items-center lg:justify-start">
-                <Link href={primaryCtaHref}>
-                  <Button
-                    size="lg"
-                    className="group w-full gap-2 rounded-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-500 px-8 py-6 text-base font-semibold text-white shadow-lg shadow-emerald-200/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl lg:w-auto"
-                  >
-                    {primaryCtaLabel}
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </Link>
-                <Link href="/journal">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full gap-2 rounded-full border-emerald-200 bg-white/80 px-8 py-6 text-base font-medium text-emerald-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-50 lg:w-auto"
-                  >
-                    Explore the journal
-                  </Button>
-                </Link>
-                <Link href="/blogs">
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    className="group w-full gap-2 rounded-full border border-transparent px-8 py-6 text-base font-medium text-emerald-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:bg-white/70 hover:text-emerald-900 lg:w-auto"
-                  >
-                    <Sparkles className="h-4 w-4 text-emerald-500 transition-transform group-hover:rotate-6" />
-                    Read the blog
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <div className="relative flex-1">
-              <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-emerald-200/40 via-transparent to-transparent blur-3xl" />
-              <div className="relative mx-auto flex max-w-md flex-col items-center gap-6 rounded-[2.5rem] border border-emerald-100/60 bg-white/60 p-8 shadow-2xl shadow-emerald-100/40 backdrop-blur md:-mt-6 lg:-mt-10">
-                <div className="absolute -top-10 right-6 h-20 w-20 rounded-full bg-white/70 shadow-lg shadow-emerald-100/40 backdrop-blur-sm" />
+          <div className="flex-1">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <figure className="relative h-48 border border-[#d6e1f1] bg-white/90 shadow-[#9ab7d3]/30 shadow-lg sm:h-56">
                 <Image
-                  src="/buddha.png"
-                  alt="Meditative illustration"
-                  width={380}
-                  height={380}
+                  src="/mindfulness.png"
+                  alt="Mindfulness practice"
+                  fill
+                  className="object-cover"
                   priority
-                  className="w-full max-w-sm animate-float-soft"
                 />
-                <div className="flex w-full flex-col items-center gap-2 text-center">
-                  <div className="h-1 w-20 rounded-full bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-300" />
-                  <p className="text-lg font-semibold tracking-tight text-stone-900">
-                    Calm isn’t a destination, it’s a ritual.
-                  </p>
-                  <p className="text-sm text-emerald-700/90">
-                    Let each reflection feel like sitting beneath a Bodhi tree.
-                  </p>
-                </div>
-              </div>
+              </figure>
+              <figure className="relative h-48 border border-[#d6e1f1] bg-white/90 shadow-[#9ab7d3]/20 shadow-md sm:h-56">
+                <Image
+                  src="/doWhatMakeHappy.png"
+                  alt="Do what makes you happy"
+                  fill
+                  className="object-cover"
+                />
+              </figure>
+              <figure className="relative h-48 border border-[#d6e1f1] bg-white/90 shadow-[#9ab7d3]/20 shadow-md sm:h-56">
+                <Image
+                  src="/think_positive.png"
+                  alt="Think positive reminder"
+                  fill
+                  className="object-cover"
+                />
+              </figure>
+              <figure className="relative h-48 border border-[#d6e1f1] bg-white/90 shadow-[#9ab7d3]/20 shadow-md sm:h-56">
+                <Image
+                  src="/worry-less.png"
+                  alt="Worry less message"
+                  fill
+                  className="object-cover"
+                />
+              </figure>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <div className="flex flex-col items-center gap-10 text-center">
+      <section
+        id="features"
+        className="mx-auto max-w-6xl scroll-mt-28 px-6 pb-20"
+      >
+        <div className="flex flex-col items-center gap-6 text-center">
           <Badge
             variant="outline"
-            className="border-emerald-200 bg-white/70 backdrop-blur"
+            className="rounded-none border-[#bcd1e6] bg-white/70"
           >
-            Designed for mindful solitude
+            Crafted for mind–body harmony
           </Badge>
-          <h2 className="max-w-3xl text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl">
-            Each interaction is gentle, intentional, and ready when you seek
-            stillness.
+          <h2 className="max-w-3xl text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl [font-family:var(--font-newsreader)]">
+            Tools that keep the noise low and the self-awareness high.
           </h2>
-          <p className="max-w-2xl text-base text-stone-600">
-            MindLog balances sensory calm with modern craft—so your reflections
-            have room to breathe.
+          <p className="max-w-2xl text-base text-slate-600">
+            Every element in MindLog is designed to soothe: light typography,
+            breathable spacing, and guidance that always feels optional.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-2">
-          {serenityFeatures.map(({ title, description, icon: Icon }) => (
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {supportFeatures.map(({ title, description, icon: Icon }) => (
             <Card
               key={title}
-              className="group h-full border-emerald-100/80 bg-white/70 transition-all duration-300 hover:-translate-y-2 hover:border-emerald-300 hover:shadow-xl"
+              className="group h-full rounded-none border-[#d6e1f1] bg-white/85 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#9ab7d3] hover:shadow-lg"
             >
-              <CardHeader className="space-y-4">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 transition-colors duration-300 group-hover:bg-emerald-600 group-hover:text-white">
+              <CardHeader className="space-y-5">
+                <div className="inline-flex h-12 w-12 items-center justify-center border border-[#d6e1f1] bg-[#e7eff7] text-[#4f6f8f] transition-colors duration-300 group-hover:bg-[#4f6f8f] group-hover:text-white">
                   <Icon className="h-5 w-5" />
                 </div>
-                <CardTitle className="text-left text-lg text-stone-900">
+                <CardTitle className="text-left text-lg text-slate-900">
                   {title}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-left text-sm leading-relaxed text-stone-600">
+              <CardContent className="text-left text-sm leading-relaxed text-slate-600">
                 {description}
               </CardContent>
             </Card>
           ))}
-
-          <Card className="border-dashed border-emerald-200 bg-gradient-to-br from-white via-emerald-50 to-white p-8 text-left shadow-lg">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-4 py-1 text-xs font-medium uppercase tracking-[0.3em] text-emerald-600">
-              <Wind className="h-4 w-4" />
-              Whisper mode
-            </div>
-            <p className="mt-6 text-lg font-semibold text-stone-900">
-              Calm technology should feel invisible.
-            </p>
-            <p className="mt-3 text-sm leading-relaxed text-stone-600">
-              We keep transitions slow, sounds optional, and visuals breathable.
-              MindLog respects the sacred simplicity of being alone with your
-              thoughts.
-            </p>
-          </Card>
         </div>
       </section>
 
-      <Separator className="mx-auto max-w-6xl border-emerald-100/60" />
+      <Separator className="mx-auto max-w-6xl border-[#d6e1f1]" />
 
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <section
+        id="ritual"
+        className="mx-auto max-w-6xl scroll-mt-28 px-6 py-20"
+      >
+        <div className="grid gap-12 lg:grid-cols-1">
           <div className="space-y-8">
             <div className="space-y-4">
               <Badge
                 variant="outline"
-                className="border-emerald-200 bg-white/70 backdrop-blur"
+                className="rounded-none border-[#bcd1e6] bg-white/70"
               >
                 A ritual loop for stillness
               </Badge>
-              <h2 className="text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl">
-                Gentle guidance, meaningful quiet.
+              <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl [font-family:var(--font-newsreader)]">
+                Slow down, notice, and carry calm with you.
               </h2>
-              <p className="text-base text-stone-600">
-                MindLog flows like a silent conversation. Every prompt, pause,
-                and closing cue is crafted to help you settle the mind and feel
-                centered again.
+              <p className="text-base text-slate-600">
+                MindLog flows like a caring conversation. The prompts and
+                closing rituals adapt to your energy to keep reflection light,
+                intentional, and healing.
               </p>
             </div>
 
-            <div className="space-y-6">
-              {solitudeRituals.map(({ title, description }, index) => (
+            <div className="space-y-5">
+              {ritualSteps.map(({ title, description }, index) => (
                 <div key={title} className="flex gap-4 text-left">
-                  <span className="mt-1 flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-sm font-semibold text-emerald-700">
+                  <span className="mt-1 flex h-9 w-9 items-center justify-center border border-[#d6e1f1] bg-[#e7eff7] text-sm font-semibold text-[#4f6f8f]">
                     {index + 1}
                   </span>
                   <div className="space-y-2">
-                    <p className="font-medium text-stone-900">{title}</p>
-                    <p className="text-sm leading-relaxed text-stone-600">
+                    <p className="font-medium text-slate-900">{title}</p>
+                    <p className="text-sm leading-relaxed text-slate-600">
                       {description}
                     </p>
                   </div>
@@ -312,72 +312,45 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-
-          <Card className="border-emerald-100/70 bg-white/75 shadow-xl shadow-emerald-100/40">
-            <CardHeader className="space-y-3">
-              <CardTitle className="text-lg text-stone-900">
-                Voices from quiet routines
-              </CardTitle>
-              <p className="text-sm text-emerald-600">
-                MindLog is the companion people reach for when they need
-                breathing room for their thoughts.
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {hushTestimonials.map(({ quote, name, role }) => (
-                <div
-                  key={name}
-                  className="rounded-3xl border border-emerald-100/80 bg-white/80 p-5 shadow-sm"
-                >
-                  <p className="text-sm italic leading-relaxed text-stone-700">
-                    “{quote}”
-                  </p>
-                  <div className="mt-3 text-xs font-medium uppercase tracking-[0.3em] text-emerald-500">
-                    {name}
-                    <span className="ml-1 font-normal normal-case tracking-normal text-stone-500">
-                      · {role}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-800 to-slate-900 py-20 text-emerald-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#4f6f8f] via-[#456380] to-[#1f3342] py-20 text-[#e7eff7]">
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-50"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 45%), radial-gradient(circle at 80% 30%, rgba(16,185,129,0.18), transparent 45%)",
+              "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 55%), radial-gradient(circle at 80% 30%, rgba(172,203,231,0.25), transparent 52%)",
           }}
         />
         <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-8 px-6 text-center">
-          <Badge variant="outline" className="border-white/50 bg-white/10">
-            Five mindful minutes is enough
+          <Badge
+            variant="outline"
+            className="rounded-none border-[#e7eff7]/70 bg-white/10 text-[#e7eff7]"
+          >
+            A mindful pause whenever you need it
           </Badge>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Create space for your mind, stay close to your calm.
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl [font-family:var(--font-newsreader)]">
+            Come as you are. Leave with steadier breath and kinder thoughts.
           </h2>
-          <p className="max-w-2xl text-base text-emerald-100">
-            Join MindLog and turn journaling into a quiet, nourishing ritual. No
-            judgement, no noise—just you and the thoughts that matter.
+          <p className="max-w-2xl text-base text-[#d3e3f4]">
+            Join MindLog to transform emotional check-ins into a soothing daily
+            ritual. No judgement, no clutter—just space to feel good again.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/signup">
               <Button
                 size="lg"
-                className="rounded-full bg-white px-8 text-emerald-700 hover:bg-emerald-100"
+                className="rounded-none bg-white px-8 text-[#2f4c63] transition-colors hover:bg-[#f0f4fb]"
               >
-                Start your first reflection
+                Create a calm space
               </Button>
             </Link>
             <Link href="/login">
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-full border-white/60 bg-transparent text-white hover:bg-white/10"
+                className="rounded-none border-white/70 bg-transparent text-white hover:bg-white/10"
               >
                 I already have an account
               </Button>

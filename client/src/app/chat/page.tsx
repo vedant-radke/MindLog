@@ -108,17 +108,17 @@ export default function ChatPage() {
   const renderedMessages = messages.length ? messages : [introMessage];
 
   return (
-    <div className="flex h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-emerald-50/60">
+    <div className="flex h-screen flex-col bg-gradient-to-br from-[#eef2f8] via-white to-[#f5f7fb]">
       <Navbar />
 
       <div className="relative flex flex-1 flex-col overflow-hidden">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(143,174,206,0.18),transparent_70%)]" />
 
-        <header className="relative z-10 border-b border-emerald-100/60 bg-white/80 backdrop-blur-sm">
+        <header className="relative z-10 border-b border-[#d6e1f1] bg-white/80 backdrop-blur-sm">
           <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-100">
-                <MessageCircle className="h-5 w-5 text-emerald-600" />
+              <div className="flex h-12 w-12 items-center justify-center border border-[#d6e1f1] bg-white/80">
+                <MessageCircle className="h-5 w-5 text-[#4f6f8f]" />
               </div>
               <div className="space-y-0.5">
                 <h1 className="text-base font-semibold text-slate-900">
@@ -129,8 +129,8 @@ export default function ChatPage() {
                 </p>
               </div>
             </div>
-            <Badge className="flex items-center gap-2 bg-emerald-100 text-emerald-700">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            <Badge className="flex items-center gap-2 border border-[#d6e1f1] bg-[#eef2f9] text-[#2f4864]">
+              <span className="h-2 w-2 bg-[#4f6f8f]" />
               Online
             </Badge>
           </div>
@@ -153,10 +153,10 @@ export default function ChatPage() {
                   className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm transition-all ${
+                    className={`max-w-[75%] border px-4 py-3 text-sm leading-relaxed shadow-sm transition-all ${
                       isUser
-                        ? "bg-emerald-600 text-white"
-                        : "border border-emerald-100/60 bg-white/90 text-slate-800"
+                        ? "border-[#4f6f8f] bg-[#4f6f8f] text-white"
+                        : "border-[#d6e1f1] bg-white/90 text-slate-800"
                     }`}
                   >
                     {message.text}
@@ -167,11 +167,11 @@ export default function ChatPage() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="flex items-center gap-3 rounded-2xl border border-emerald-100/60 bg-white/90 px-4 py-3 text-sm text-slate-600 shadow-sm">
+                <div className="flex items-center gap-3 border border-[#d6e1f1] bg-white/90 px-4 py-3 text-sm text-slate-600 shadow-sm">
                   <div className="flex gap-1">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 [animation-delay:0.2s]" />
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 [animation-delay:0.4s]" />
+                    <span className="h-2 w-2 animate-pulse bg-[#4f6f8f]" />
+                    <span className="h-2 w-2 animate-pulse bg-[#4f6f8f] [animation-delay:0.2s]" />
+                    <span className="h-2 w-2 animate-pulse bg-[#4f6f8f] [animation-delay:0.4s]" />
                   </div>
                   <span>MindLog is thinking...</span>
                 </div>
@@ -180,7 +180,7 @@ export default function ChatPage() {
           </div>
         </main>
 
-        <footer className="relative border-t border-emerald-100/60 bg-white/90 backdrop-blur-sm">
+        <footer className="relative border-t border-[#d6e1f1] bg-white/90 backdrop-blur-sm">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-2 px-4 py-4 sm:px-6">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <Input
@@ -189,14 +189,14 @@ export default function ChatPage() {
                 onChange={(event) => setInput(event.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Share what’s on your mind... (Press Enter to send)"
-                className="h-12 flex-1 rounded-2xl border-emerald-200 bg-white/90 text-base focus:border-emerald-400 focus:ring-emerald-300"
+                className="h-12 flex-1 border border-[#d6e1f1] bg-white/90 text-base focus:border-[#4f6f8f] focus:ring-[#c2d0e5]"
                 disabled={loading || !token}
                 autoFocus
               />
               <Button
                 type="submit"
                 disabled={loading || !token || !input.trim()}
-                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 p-0 text-white transition hover:bg-emerald-500 disabled:opacity-50"
+                className="flex h-12 w-12 items-center justify-center border border-[#4f6f8f] bg-[#4f6f8f] p-0 text-white transition hover:bg-[#435c78] disabled:opacity-50"
               >
                 <Send className="h-5 w-5" />
               </Button>

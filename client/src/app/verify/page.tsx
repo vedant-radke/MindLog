@@ -15,7 +15,6 @@ export default async function VerifyPage({
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-emerald-50/60">
       <Navbar />
-
       <VerifyClient token={token} />
     </div>
   );

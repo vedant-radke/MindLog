@@ -169,19 +169,19 @@ export default function AuthForm({ mode }: Props) {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-slate-100 px-4 py-16">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_60%)]" />
-      <div className="relative mx-auto grid w-full max-w-6xl gap-12 rounded-3xl border border-emerald-100/50 bg-white/70 p-6 shadow-xl shadow-emerald-100/30 backdrop-blur lg:grid-cols-[1.1fr_0.9fr] lg:p-12">
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#eef2f8] via-white to-[#f5f7fb] px-6 py-16">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(143,174,206,0.14),transparent_60%)]" />
+      <div className="relative mx-auto grid w-full max-w-6xl gap-12 border border-[#d6e1f1] bg-white/85 px-6 py-10 shadow-xl shadow-[#9ab7d3]/30 backdrop-blur-sm lg:grid-cols-[1.1fr_1fr] lg:px-12 lg:py-16">
         <div className="flex flex-col justify-between gap-10">
           <div className="space-y-6">
             <Badge
               variant="outline"
-              className="border-emerald-200 bg-emerald-50 text-emerald-700"
+              className="border-[#bcd1e6] bg-white/80 text-[#4f6f8f]"
             >
               MindLog • {mode === "login" ? "Welcome back" : "Create your calm"}
             </Badge>
             <div className="space-y-4">
-              <h1 className="text-4xl font-semibold tracking-tight text-slate-900 lg:text-5xl">
+              <h1 className="text-4xl font-semibold tracking-tight text-slate-900 lg:text-5xl [font-family:var(--font-newsreader)]">
                 {mode === "login"
                   ? "Return to the rituals that keep you grounded."
                   : "Begin a journaling practice designed for your mind."}
@@ -194,20 +194,38 @@ export default function AuthForm({ mode }: Props) {
             </div>
           </div>
 
-          <div className="grid gap-4 text-sm text-slate-600">
+          <div className="grid gap-3 text-sm text-slate-600">
             {highlightItems.map(({ icon: Icon, label }) => (
               <div
                 key={label}
-                className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-white/70 px-4 py-3 backdrop-blur"
+                className="flex items-center gap-3 border border-[#d6e1f1] bg-white/70 px-4 py-3"
               >
-                <Icon className="h-4 w-4 text-emerald-600" />
+                <Icon className="h-4 w-4 text-[#4f6f8f]" />
                 <span>{label}</span>
               </div>
             ))}
           </div>
+
+          <div className="space-y-3 text-sm text-slate-500">
+            <p>
+              MindLog keeps your reflections private and guides you toward
+              consistent, gentle progress. Start where you are—every entry
+              counts.
+            </p>
+            <p>
+              Need to switch modes?
+              <Link
+                href={mode === "login" ? "/signup" : "/login"}
+                className="ml-1 font-medium text-[#4f6f8f] underline-offset-4 hover:text-[#3c556d] hover:underline"
+              >
+                {mode === "login" ? "Create an account" : "Log in"}
+              </Link>
+              .
+            </p>
+          </div>
         </div>
 
-        <Card className="border-none bg-white/80 backdrop-blur">
+        <Card className="border border-[#d6e1f1] bg-white/90 shadow-lg shadow-[#cbd9ed]/40">
           <CardHeader className="space-y-3">
             <CardTitle className="text-2xl font-semibold text-slate-900">
               {mode === "login" ? "Sign in to continue" : "Create your account"}
@@ -221,8 +239,8 @@ export default function AuthForm({ mode }: Props) {
           <CardContent>
             {mode === "signup" && pendingVerificationEmail ? (
               <div className="space-y-6 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-                  <MailCheck className="h-8 w-8 text-emerald-600" />
+                <div className="mx-auto flex h-16 w-16 items-center justify-center border border-[#d6e1f1] bg-[#e7eff7]">
+                  <MailCheck className="h-8 w-8 text-[#4f6f8f]" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-semibold text-slate-900">
@@ -247,7 +265,7 @@ export default function AuthForm({ mode }: Props) {
                     type="button"
                     onClick={handleResendVerification}
                     disabled={resendLoading}
-                    className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-6 text-white shadow hover:bg-emerald-500 disabled:opacity-70"
+                    className="inline-flex items-center gap-2 rounded-none bg-[#4f6f8f] px-6 text-white shadow-sm hover:bg-[#456380] disabled:opacity-70"
                   >
                     {resendLoading ? "Sending..." : "Resend email"}
                     <RefreshCcw className="h-4 w-4" />
@@ -255,7 +273,7 @@ export default function AuthForm({ mode }: Props) {
                   <Button
                     type="button"
                     variant="outline"
-                    className="rounded-full px-6"
+                    className="rounded-none border-[#bcd1e6] px-6 text-[#2f4c63] hover:bg-[#f0f4fb]"
                     onClick={() => router.push("/login")}
                   >
                     Back to login
@@ -300,7 +318,7 @@ export default function AuthForm({ mode }: Props) {
                         placeholder="What should we call you?"
                         autoComplete="name"
                         {...register("name")}
-                        className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
+                        className="h-11 rounded-none border-[#d6e1f1] bg-white/70 focus:border-[#9ab7d3] focus:ring-[#c7d8ec]"
                       />
                       {errors.name && (
                         <p className="text-sm text-rose-500">
@@ -323,7 +341,7 @@ export default function AuthForm({ mode }: Props) {
                       autoComplete="email"
                       placeholder="you@example.com"
                       {...register("email")}
-                      className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
+                      className="h-11 rounded-none border-[#d6e1f1] bg-white/70 focus:border-[#9ab7d3] focus:ring-[#c7d8ec]"
                     />
                     {errors.email && (
                       <p className="text-sm text-rose-500">
@@ -347,7 +365,7 @@ export default function AuthForm({ mode }: Props) {
                       }
                       placeholder="Create a secure password"
                       {...register("password")}
-                      className="h-11 rounded-xl border-slate-200 bg-white/70 focus:border-emerald-300 focus:ring-emerald-200"
+                      className="h-11 rounded-none border-[#d6e1f1] bg-white/70 focus:border-[#9ab7d3] focus:ring-[#c7d8ec]"
                     />
                     {errors.password && (
                       <p className="text-sm text-rose-500">
@@ -359,7 +377,7 @@ export default function AuthForm({ mode }: Props) {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="group flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 py-3 text-base font-semibold text-white transition-colors hover:bg-emerald-500 disabled:opacity-80"
+                    className="group flex w-full items-center justify-center gap-2 rounded-none bg-[#4f6f8f] py-3 text-base font-semibold text-white transition-colors hover:bg-[#456380] disabled:opacity-80"
                   >
                     {isSubmitting
                       ? mode === "login"
@@ -378,7 +396,7 @@ export default function AuthForm({ mode }: Props) {
                       New to MindLog?{" "}
                       <Link
                         href="/signup"
-                        className="font-medium text-emerald-600 underline-offset-4 transition-colors hover:text-emerald-700 hover:underline"
+                        className="font-medium text-[#4f6f8f] underline-offset-4 transition-colors hover:text-[#3c556d] hover:underline"
                       >
                         Create an account
                       </Link>
@@ -388,7 +406,7 @@ export default function AuthForm({ mode }: Props) {
                       Already a member?{" "}
                       <Link
                         href="/login"
-                        className="font-medium text-emerald-600 underline-offset-4 transition-colors hover:text-emerald-700 hover:underline"
+                        className="font-medium text-[#4f6f8f] underline-offset-4 transition-colors hover:text-[#3c556d] hover:underline"
                       >
                         Log in here
                       </Link>

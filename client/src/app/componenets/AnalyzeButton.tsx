@@ -41,7 +41,7 @@ export default function AnalyzeButton({ days = 7 }: Props) {
         onClick={handleAnalyze}
         disabled={loading}
         size="lg"
-        className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:scale-105 focus-visible:ring-emerald-200"
+        className="group flex items-center gap-2 border border-[#4f6f8f] bg-[#4f6f8f] px-6 py-3 text-base font-semibold text-white shadow-lg shadow-[#9ab7d3]/40 transition hover:-translate-y-0.5 hover:bg-[#435c78] focus-visible:ring-[#c2d0e5]"
       >
         <Sparkles
           className={cn(

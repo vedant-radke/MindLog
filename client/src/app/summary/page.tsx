@@ -38,19 +38,19 @@ const SECTION_CONFIG: Array<Omit<SummarySection, "description">> = [
     key: "Emotion",
     title: "Emotional landscape",
     icon: <Brain className="h-4 w-4" />,
-    accent: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    accent: "border-[#d6e1f1] bg-[#e7eff7] text-[#2f4c63]",
   },
   {
     key: "Solution",
     title: "Grounding practices",
     icon: <Compass className="h-4 w-4" />,
-    accent: "border-sky-200 bg-sky-50 text-sky-700",
+    accent: "border-[#cbd9ed] bg-[#eef2f9] text-[#2f4c63]",
   },
   {
     key: "Motivation",
     title: "Momentum to keep",
     icon: <Flame className="h-4 w-4" />,
-    accent: "border-amber-200 bg-amber-50 text-amber-700",
+    accent: "border-[#bfcfe4] bg-[#e9eff8] text-[#2f4c63]",
   },
 ];
 
@@ -151,14 +151,14 @@ export default function SummaryPage() {
   return (
     <>
       <Navbar />
-      <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 via-white to-emerald-50/40">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.18),transparent_70%)]" />
+      <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#eef2f8] via-white to-[#f5f7fb]">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_top,rgba(143,174,206,0.18),transparent_70%)]" />
 
         <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-20">
           <div className="flex flex-col items-center gap-4 text-center">
             <Badge
               variant="outline"
-              className="border-emerald-200 bg-white/80 text-emerald-700"
+              className="border-[#bcd1e6] bg-white/80 text-[#4f6f8f]"
             >
               <Sparkles className="mr-2 h-4 w-4" />
               MindLog analysis
@@ -173,10 +173,10 @@ export default function SummaryPage() {
             </p>
           </div>
 
-          <Card className="border-none bg-white/90 shadow-xl shadow-emerald-100/40 backdrop-blur">
-            <CardHeader className="gap-3 border-b border-emerald-100/70">
+          <Card className="border border-[#d6e1f1] bg-white/90 shadow-xl shadow-[#cbd9ed]/40 backdrop-blur">
+            <CardHeader className="gap-3 border-b border-[#d6e1f1]">
               <CardTitle className="flex items-center gap-2 text-lg text-slate-900">
-                <Brain className="h-5 w-5 text-emerald-600" />
+                <Brain className="h-5 w-5 text-[#4f6f8f]" />
                 Summary snapshot
               </CardTitle>
               <CardDescription className="text-sm text-slate-600">
@@ -197,14 +197,14 @@ export default function SummaryPage() {
                 <div className="space-y-4">
                   {[0, 1, 2].map((idx) => (
                     <div key={idx} className="space-y-3">
-                      <div className="h-6 w-48 animate-pulse rounded-full bg-emerald-100/60" />
+                      <div className="h-6 w-48 animate-pulse bg-[#d6e1f1]" />
                       <div className="space-y-2">
-                        <div className="h-4 w-full animate-pulse rounded bg-slate-100" />
-                        <div className="h-4 w-5/6 animate-pulse rounded bg-slate-100" />
-                        <div className="h-4 w-2/3 animate-pulse rounded bg-slate-100" />
+                        <div className="h-4 w-full animate-pulse bg-[#eef2f9]" />
+                        <div className="h-4 w-5/6 animate-pulse bg-[#eef2f9]" />
+                        <div className="h-4 w-2/3 animate-pulse bg-[#eef2f9]" />
                       </div>
                       {idx !== 2 ? (
-                        <Separator className="border-emerald-100/60" />
+                        <Separator className="border-[#d6e1f1]" />
                       ) : null}
                     </div>
                   ))}
@@ -214,15 +214,15 @@ export default function SummaryPage() {
                   {error}
                 </div>
               ) : !isSummaryReady ? (
-                <div className="flex flex-col items-center gap-3 rounded-lg border border-emerald-100 bg-emerald-50/60 p-6 text-sm text-emerald-700">
-                  <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
+                <div className="flex flex-col items-center gap-3 border border-[#d6e1f1] bg-[#eef2f9] p-6 text-sm text-[#2f4c63]">
+                  <Loader2 className="h-5 w-5 animate-spin text-[#4f6f8f]" />
                   <span>
                     We’re still polishing your insights. This usually takes a
                     few seconds.
                   </span>
                 </div>
               ) : shouldShowFallback ? (
-                <div className="rounded-lg border border-amber-100 bg-amber-50/60 p-4 text-sm text-amber-700">
+                <div className="border border-[#d6e1f1] bg-[#eef2f9] p-4 text-sm text-[#2f4c63]">
                   We couldn’t extract clear insights yet. Try journaling a
                   little more for richer summaries.
                 </div>
@@ -242,7 +242,7 @@ export default function SummaryPage() {
                       {description}
                     </p>
                     {key !== sections[sections.length - 1].key ? (
-                      <Separator className="border-emerald-100/60" />
+                      <Separator className="border-[#d6e1f1]" />
                     ) : null}
                   </section>
                 ))
@@ -254,14 +254,14 @@ export default function SummaryPage() {
             <Link href="/journal">
               <Button
                 variant="outline"
-                className="gap-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                className="gap-2 border-[#d6e1f1] text-[#2f4c63] hover:bg-[#eef2f9]"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to journals
               </Button>
             </Link>
             <Link href="/journal/new">
-              <Button className="gap-2 bg-emerald-600 text-white hover:bg-emerald-500">
+              <Button className="gap-2 bg-[#4f6f8f] text-white hover:bg-[#435c78]">
                 Add another reflection
               </Button>
             </Link>

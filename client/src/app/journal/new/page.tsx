@@ -102,20 +102,20 @@ export default function NewJournalPage() {
   return (
     <>
       <Navbar />
-      <main className="relative min-h-[calc(100vh-64px)] bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 pb-16">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.16),transparent_70%)]" />
+      <main className="relative min-h-[calc(100vh-64px)] bg-gradient-to-br from-[#eef2f8] via-white to-[#f5f7fb] pb-16">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(143,174,206,0.18),transparent_70%)]" />
 
         <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-12">
           <section className="space-y-4 text-center">
             <Badge
               variant="outline"
-              className="mx-auto flex w-fit items-center gap-2 border-emerald-200 bg-white/80 text-emerald-700"
+              className="mx-auto flex w-fit items-center gap-2 border-[#bcd1e6] bg-white/80 text-[#4f6f8f]"
             >
               <Sparkles className="h-3.5 w-3.5" />
               Daily reflection
             </Badge>
             <div className="space-y-3">
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+              <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl [font-family:var(--font-newsreader)]">
                 Anchor your thoughts for today
               </h1>
               <p className="mx-auto max-w-2xl text-sm text-slate-600">
@@ -128,13 +128,13 @@ export default function NewJournalPage() {
 
           <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
             <div className="space-y-6">
-              <div className="flex justify-end rounded-2xl border border-emerald-100 bg-white/70 p-3 shadow-sm">
+              <div className="flex justify-end border border-[#d6e1f1] bg-white/80 p-3 shadow-sm">
                 <div className="text-xs text-slate-500">
                   {wordCount} {wordCount === 1 ? "word" : "words"}
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-emerald-100 bg-white/80 p-8 shadow-lg shadow-emerald-100/40 min-h-[400px]">
+              <div className="border border-[#d6e1f1] bg-white/85 p-6 shadow-lg shadow-[#cbd9ed]/40 min-h-[400px]">
                 {editor ? (
                   <EditorContent
                     editor={editor}
@@ -145,7 +145,7 @@ export default function NewJournalPage() {
 
               <div className="space-y-3">
                 <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-                  <Feather className="h-4 w-4 text-emerald-500" />
+                  <Feather className="h-4 w-4 text-[#4f6f8f]" />
                   Need a spark?
                 </h2>
                 <div className="flex flex-wrap gap-2">
@@ -155,7 +155,7 @@ export default function NewJournalPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="rounded-full border-emerald-200 bg-white/70 text-xs text-emerald-700 hover:bg-emerald-50"
+                      className="rounded-none border-[#bcd1e6] bg-white/80 text-xs text-[#4f6f8f] hover:border-[#9ab7d3] hover:bg-[#eef4fb]"
                       onClick={() => handlePromptInsert(prompt)}
                     >
                       {prompt}
@@ -167,7 +167,7 @@ export default function NewJournalPage() {
               <div className="flex flex-wrap gap-3">
                 <Button
                   onClick={handleSave}
-                  className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-6 text-white hover:bg-emerald-500"
+                  className="inline-flex items-center gap-2 rounded-none bg-[#4f6f8f] px-6 text-white hover:bg-[#456380]"
                   disabled={isSaving}
                 >
                   {isSaving ? (
@@ -183,7 +183,7 @@ export default function NewJournalPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="rounded-full"
+                  className="rounded-none border-[#bcd1e6] text-[#2f4c63] hover:bg-[#eef4fb]"
                   onClick={() => router.push("/journal")}
                   disabled={isSaving}
                 >
@@ -192,10 +192,10 @@ export default function NewJournalPage() {
               </div>
             </div>
 
-            <aside className="hidden h-fit flex-col gap-4 rounded-3xl border border-emerald-100 bg-white/70 p-6 shadow-md shadow-emerald-100/30 lg:flex">
+            <aside className="hidden h-fit flex-col gap-5 border border-[#d6e1f1] bg-white/85 p-6 shadow-md shadow-[#cbd9ed]/30 lg:flex">
               <div className="space-y-3">
                 <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900">
-                  <Sun className="h-5 w-5 text-emerald-500" />
+                  <Sun className="h-5 w-5 text-[#4f6f8f]" />
                   Gentle prompts
                 </h3>
                 <p className="text-sm text-slate-600">
@@ -204,15 +204,15 @@ export default function NewJournalPage() {
                   patterns.
                 </p>
               </div>
-              <Separator className="border-emerald-100" />
+              <Separator className="border-[#d6e1f1]" />
               <ul className="space-y-3 text-sm text-slate-600">
-                <li className="rounded-2xl bg-emerald-50/80 p-3">
+                <li className="border border-[#d6e1f1] bg-[#e7eff7] p-3">
                   Notice one emotion that surfaced today. What sparked it?
                 </li>
-                <li className="rounded-2xl bg-emerald-50/80 p-3">
+                <li className="border border-[#d6e1f1] bg-[#e7eff7] p-3">
                   Describe a moment you appreciated—even if it was fleeting.
                 </li>
-                <li className="rounded-2xl bg-emerald-50/80 p-3">
+                <li className="border border-[#d6e1f1] bg-[#e7eff7] p-3">
                   What support would feel nourishing tomorrow?
                 </li>
               </ul>

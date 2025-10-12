@@ -46,7 +46,7 @@ type Journal = {
 
 const getSentimentBadgeClasses = (sentiment?: string) => {
   if (!sentiment) {
-    return "border-slate-200 bg-slate-100 text-slate-700";
+    return "border-[#d6e1f1] bg-[#eef2f9] text-[#4f6f8f]";
   }
 
   const normalized = sentiment.toLowerCase();
@@ -56,7 +56,7 @@ const getSentimentBadgeClasses = (sentiment?: string) => {
   }
 
   if (normalized.includes("pos")) {
-    return "border-emerald-300 bg-emerald-50 text-emerald-700";
+    return "border-[#9ab7d3] bg-[#e7eff7] text-[#2f4c63]";
   }
 
   return "border-amber-300 bg-amber-50 text-amber-700";
@@ -157,51 +157,79 @@ export default function JournalPage() {
       <Navbar />
       <AnalyzeButton />
 
-      <main className="relative min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/40 pb-32">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,197,94,0.12),transparent_65%)]" />
+      <main className="relative min-h-screen bg-gradient-to-b from-[#eef2f8] via-white to-[#f5f7fb] pb-32">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(143,174,206,0.18),transparent_65%)]" />
         <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 py-16">
-          <section className="flex flex-wrap items-start justify-between gap-8">
-            <div className="max-w-2xl space-y-4">
+          <section className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-start">
+            <div className="space-y-6">
               <Badge
                 variant="outline"
-                className="border-emerald-200 bg-emerald-50 text-emerald-600"
+                className="border-[#bcd1e6] bg-white/80 text-[#4f6f8f]"
               >
                 Daily reflections
               </Badge>
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                Your journal library, calm and organized.
-              </h1>
-              <p className="text-base leading-relaxed text-slate-600">
-                Track your emotional patterns, revisit meaningful entries, and
-                notice how your practice evolves over time.
-              </p>
+              <div className="space-y-4">
+                <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl [font-family:var(--font-newsreader)]">
+                  Your journal library, calm and organized.
+                </h1>
+                <p className="text-base leading-relaxed text-slate-600">
+                  Track your emotional patterns, revisit meaningful entries, and
+                  notice how your practice evolves over time.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link href="/journal/new">
+                  <Button
+                    size="sm"
+                    className="gap-2 rounded-none bg-[#4f6f8f] px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#456380]"
+                  >
+                    Start a new entry
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href="/summary" className="sm:w-auto">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="rounded-none border-[#bcd1e6] bg-white/80 px-6 py-3 text-sm font-medium text-[#2f4c63] hover:border-[#9ab7d3] hover:bg-[#eef4fb]"
+                  >
+                    View recent summary
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <div className="flex flex-col items-stretch gap-3 sm:flex-row">
-              <Link href="/journal/new">
-                <Button size="lg" className="gap-2">
-                  Start a new entry
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/summary" className="sm:w-auto">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-emerald-200 bg-white/70 text-emerald-700 hover:bg-emerald-50"
-                >
-                  View recent summary
-                </Button>
-              </Link>
+            <div className="flex h-full flex-col gap-4 border border-[#d6e1f1] bg-white/85 p-6 text-sm text-slate-600 shadow-md shadow-[#cbd9ed]/40">
+              <h3 className="text-base font-semibold text-slate-900">
+                Make the most of your practice
+              </h3>
+              <p>
+                Drop in for a few minutes each day, revisit patterns in your
+                reflections, and capture insights when they feel fresh.
+              </p>
+              <Separator className="border-[#d6e1f1]" />
+              <ul className="space-y-2">
+                <li className="border border-[#d6e1f1] bg-[#eef2f9] p-3 text-[#2f4c63]">
+                  Add entries whenever inspiration hits—MindLog keeps them
+                  organized chronologically.
+                </li>
+                <li className="border border-[#d6e1f1] bg-[#eef2f9] p-3 text-[#2f4c63]">
+                  Trigger quick analyses to surface emotions and actionable
+                  suggestions.
+                </li>
+                <li className="border border-[#d6e1f1] bg-[#eef2f9] p-3 text-[#2f4c63]">
+                  Revisit your summaries to stay grounded in what matters.
+                </li>
+              </ul>
             </div>
           </section>
 
           <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="border-emerald-100 bg-white/80 shadow-md shadow-emerald-100/30 backdrop-blur">
+            <Card className="border-[#d6e1f1] bg-white/85 shadow-md shadow-[#cbd9ed]/40">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-slate-600">
                   Entries captured
                 </CardTitle>
-                <LineChart className="h-4 w-4 text-emerald-500" />
+                <LineChart className="h-4 w-4 text-[#4f6f8f]" />
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-semibold text-slate-900">
@@ -214,12 +242,12 @@ export default function JournalPage() {
                 </CardDescription>
               </CardContent>
             </Card>
-            <Card className="border-emerald-100 bg-white/80 shadow-md shadow-emerald-100/30 backdrop-blur">
+            <Card className="border-[#d6e1f1] bg-white/85 shadow-md shadow-[#cbd9ed]/40">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-slate-600">
                   Last reflection
                 </CardTitle>
-                <Clock className="h-4 w-4 text-emerald-500" />
+                <Clock className="h-4 w-4 text-[#4f6f8f]" />
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-semibold text-slate-900">
@@ -232,12 +260,12 @@ export default function JournalPage() {
                 </CardDescription>
               </CardContent>
             </Card>
-            <Card className="border-emerald-100 bg-white/80 shadow-md shadow-emerald-100/30 backdrop-blur">
+            <Card className="border-[#d6e1f1] bg-white/85 shadow-md shadow-[#cbd9ed]/40">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-slate-600">
                   Average insights
                 </CardTitle>
-                <ArrowRight className="h-4 w-4 text-emerald-500" />
+                <ArrowRight className="h-4 w-4 text-[#4f6f8f]" />
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-semibold text-slate-900">
@@ -250,7 +278,7 @@ export default function JournalPage() {
             </Card>
           </section>
 
-          <Separator className="border-emerald-100/70" />
+          <Separator className="border-[#d6e1f1]" />
 
           <section className="space-y-6">
             <header className="flex items-center justify-between">
@@ -267,12 +295,12 @@ export default function JournalPage() {
                 {Array.from({ length: 3 }).map((_, idx) => (
                   <div
                     key={idx}
-                    className="h-32 animate-pulse rounded-3xl border border-emerald-100 bg-white/70"
+                    className="h-32 animate-pulse border border-[#d6e1f1] bg-white/70"
                   />
                 ))}
               </div>
             ) : entriesCount === 0 ? (
-              <Card className="border-dashed border-emerald-200 bg-white/70 p-8 text-center">
+              <Card className="border border-dashed border-[#bcd1e6] bg-white/80 p-8 text-center">
                 <CardContent className="space-y-4 p-0">
                   <h3 className="text-lg font-semibold text-slate-900">
                     No journal entries yet
@@ -282,7 +310,7 @@ export default function JournalPage() {
                     emotional journey.
                   </p>
                   <Link href="/journal/new">
-                    <Button className="gap-2">
+                    <Button className="gap-2 rounded-none bg-[#4f6f8f] px-6 py-3 text-sm font-semibold text-white hover:bg-[#456380]">
                       Start journaling now
                       <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -309,14 +337,14 @@ export default function JournalPage() {
                   return (
                     <Card
                       key={journal._id}
-                      className="group border border-emerald-100 bg-white/80 shadow-sm shadow-emerald-100/30 transition-transform duration-300 hover:-translate-y-1 hover:border-emerald-200"
+                      className="group border border-[#d6e1f1] bg-white/85 shadow-sm shadow-[#cbd9ed]/30 transition-transform duration-300 hover:-translate-y-1 hover:border-[#9ab7d3]"
                     >
                       <CardHeader className="space-y-3">
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex flex-wrap items-center gap-3">
                             <Badge
                               variant="outline"
-                              className="border-emerald-200 bg-emerald-50 text-emerald-700"
+                              className="border-[#bcd1e6] bg-white/80 text-[#4f6f8f]"
                             >
                               {entryDate}
                             </Badge>
@@ -324,7 +352,7 @@ export default function JournalPage() {
                               <Badge
                                 variant="outline"
                                 className={cn(
-                                  "rounded-full border px-3 py-1 text-xs font-medium",
+                                  "border px-3 py-1 text-xs font-medium",
                                   sentimentClasses
                                 )}
                               >
@@ -390,7 +418,7 @@ export default function JournalPage() {
                               (emotion) => (
                                 <Badge
                                   key={emotion}
-                                  className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                                  className="border border-[#d6e1f1] bg-[#e7eff7] text-[#2f4c63] hover:bg-[#e7eff7]"
                                 >
                                   {emotion}
                                 </Badge>
