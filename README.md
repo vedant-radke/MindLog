@@ -54,10 +54,4 @@ The script is set to run daily at 9 PM. You can adjust the cron schedule in `not
 
 - **sendEmail**: Reusable function to send emails.
 
-## Contributing
 
-Feel free to contribute to the project by submitting pull requests, reporting issues, or suggesting improvements.
-
-## License
-
-[Your License]
