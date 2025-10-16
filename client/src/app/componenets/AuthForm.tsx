@@ -173,7 +173,7 @@ export default function AuthForm({ mode }: Props) {
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-[#eef2f8] via-white to-[#f5f7fb] px-4 py-6 lg:px-10">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(143,174,206,0.14),transparent_60%)]" />
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 border border-[#d6e1f1] bg-white/85 px-5 py-8 shadow-xl shadow-[#9ab7d3]/30 backdrop-blur-sm lg:grid-cols-[1.1fr_1fr] lg:px-12 lg:py-12">
-  <div className="hidden max-h-[calc(100vh-4rem)] flex-col justify-between gap-10 overflow-y-auto pr-1 lg:flex">
+        <div className="hidden max-h-[calc(100vh-4rem)] flex-col justify-between gap-10 overflow-y-auto pr-1 lg:flex">
           <div className="space-y-6">
             <Badge
               variant="outline"
@@ -226,7 +226,7 @@ export default function AuthForm({ mode }: Props) {
           </div>
         </div>
 
-  <Card className="mx-auto w-full max-w-md border border-[#d6e1f1] bg-white/90 shadow-lg shadow-[#cbd9ed]/40 max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <Card className="mx-auto w-full max-w-md border border-[#d6e1f1] bg-white/90 shadow-lg shadow-[#cbd9ed]/40 max-h-[calc(100vh-4rem)] overflow-y-auto">
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between gap-4">
               <CardTitle className="text-2xl font-semibold text-slate-900">
