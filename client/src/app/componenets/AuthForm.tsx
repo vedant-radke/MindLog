@@ -23,6 +23,7 @@ import { saveToken } from "../../lib/auth";
 import {
   ArrowRight,
   Feather,
+  Home,
   MailCheck,
   MailWarning,
   RefreshCcw,
@@ -169,10 +170,10 @@ export default function AuthForm({ mode }: Props) {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#eef2f8] via-white to-[#f5f7fb] px-6 py-16">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-[#eef2f8] via-white to-[#f5f7fb] px-4 py-6 lg:px-10">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(143,174,206,0.14),transparent_60%)]" />
-      <div className="relative mx-auto grid w-full max-w-6xl gap-12 border border-[#d6e1f1] bg-white/85 px-6 py-10 shadow-xl shadow-[#9ab7d3]/30 backdrop-blur-sm lg:grid-cols-[1.1fr_1fr] lg:px-12 lg:py-16">
-        <div className="flex flex-col justify-between gap-10">
+      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 border border-[#d6e1f1] bg-white/85 px-5 py-8 shadow-xl shadow-[#9ab7d3]/30 backdrop-blur-sm lg:grid-cols-[1.1fr_1fr] lg:px-12 lg:py-12">
+  <div className="hidden max-h-[calc(100vh-4rem)] flex-col justify-between gap-10 overflow-y-auto pr-1 lg:flex">
           <div className="space-y-6">
             <Badge
               variant="outline"
@@ -225,11 +226,24 @@ export default function AuthForm({ mode }: Props) {
           </div>
         </div>
 
-        <Card className="border border-[#d6e1f1] bg-white/90 shadow-lg shadow-[#cbd9ed]/40">
-          <CardHeader className="space-y-3">
-            <CardTitle className="text-2xl font-semibold text-slate-900">
-              {mode === "login" ? "Sign in to continue" : "Create your account"}
-            </CardTitle>
+  <Card className="mx-auto w-full max-w-md border border-[#d6e1f1] bg-white/90 shadow-lg shadow-[#cbd9ed]/40 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <CardHeader className="space-y-4">
+            <div className="flex items-center justify-between gap-4">
+              <CardTitle className="text-2xl font-semibold text-slate-900">
+                {mode === "login"
+                  ? "Sign in to continue"
+                  : "Create your account"}
+              </CardTitle>
+              <Button
+                type="button"
+                variant="ghost"
+                className="inline-flex items-center gap-2 text-[#4f6f8f] hover:bg-[#f0f4fb]"
+                onClick={() => router.push("/")}
+              >
+                <Home className="h-4 w-4" />
+                Home
+              </Button>
+            </div>
             <p className="text-sm text-slate-500">
               {mode === "login"
                 ? "We’re glad you’re back. Enter your details to pick up where you left off."
